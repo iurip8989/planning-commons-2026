@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>心中山 Planning Commons</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Global Urban Regional Studio 2026</p>
+        <h1>心中山 Planning Commons</h1>
+      </div>
+      <div class="topbar-actions">
+        <label class="language-picker" for="siteLanguage">
+          <span data-i18n="language">言語</span>
+          <select id="siteLanguage" aria-label="Language">
+            <option value="ja">日本語</option>
+            <option value="zh-Hant">繁體中文</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <nav class="topnav" aria-label="主要セクション">
+        <a href="#overview" data-i18n="navOverview">概要</a>
+        <a href="#visuals" data-i18n="navVisuals">位置・図表</a>
+        <a href="#people" data-i18n="navPeople">人のデータ</a>
+        <a href="#space" data-i18n="navSpace">空間のデータ</a>
+        <a href="#cases" data-i18n="navCases">事例</a>
+        <a href="#prompts" data-i18n="navPrompts">AIプロンプト</a>
+        <a href="#fieldwork" data-i18n="navUpload">現地調査アップロード</a>
+        <a href="#sources" data-i18n="navSources">資料一覧</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="overview" class="workspace">
+        <aside class="control-panel" aria-label="資料検索">
+          <div class="panel-block">
+            <label for="siteSearch" data-i18n="searchLabel">資料・事例を検索</label>
+            <input id="siteSearch" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="例: 赤峰街、人口、都市更新、案例、park" />
+          </div>
+          <div class="panel-block">
+            <p class="control-title" data-i18n="filterLabel">テーマで絞り込む</p>
+            <div id="tagFilters" class="filter-stack"></div>
+          </div>
+          <div class="panel-block source-note">
+            <p id="filterStatus">すべての資料を表示中。</p>
+          </div>
+          <div class="panel-block source-note">
+            <p data-i18n="classroomNotice">このサイトは授業内の検討用資料であり、外部サイトや書籍の本文・画像を転載せず、短い要約・出典リンク・授業用の分析軸で構成している。</p>
+          </div>
+        </aside>
+
+        <section class="main-surface">
+          <div class="intro-layout">
+            <div class="intro-copy">
+              <p class="eyebrow" data-i18n="studyArea">対象地</p>
+              <h2 data-i18n="heroTitle">中山駅から雙連駅へ、線形公園・路地・商業・記憶をつなぐ。</h2>
+              <p data-i18n="heroBody">
+                本サイトは、事前学習と現地調査で使うための資料入口である。
+                「人のデータ」と「空間のデータ」を同じ画面で見比べ、AIに投げる問いをつくる。
+              </p>
+            </div>
+            <figure class="map-figure">
+              <img src="assets/shin-zhongshan-map.png" alt="心中山地区の概略図" />
+              <figcaption data-i18n="mapCaption">概略図。法定境界や正確な位置は原資料で確認する。</figcaption>
+            </figure>
+          </div>
+
+          <div id="keyMetrics" class="metric-grid" aria-label="主要指標"></div>
+          <div id="searchResults" class="search-results" aria-live="polite"></div>
+          <section class="reading-frame">
+            <h3 data-i18n="howToRead">このサイトの読み方</h3>
+            <div class="reading-grid">
+              <article>
+                <span class="step-num">1</span>
+                <h4 data-i18n="step1Title">現況をつかむ</h4>
+                <p data-i18n="step1Body">人口、年齢、商業、交通、人流、生活景のデータから、誰のどんな課題があるかを仮説化する。</p>
+              </article>
+              <article>
+                <span class="step-num">2</span>
+                <h4 data-i18n="step2Title">空間と照合する</h4>
+                <p data-i18n="step2Body">線形公園、路地、騎楼、都市更新、用途規制などの空間制度と照らし合わせる。</p>
+              </article>
+              <article>
+                <span class="step-num">3</span>
+                <h4 data-i18n="step3Title">事例で考える</h4>
+                <p data-i18n="step3Body">SSD100と都市の鍼治療の事例を、心中山にそのまま移植せず、条件差を見ながら読み替える。</p>
+              </article>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section id="visuals" class="content-band alt">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="orientationLabel">Orientation &amp; Visual Notes</p>
+          <h2 data-i18n="visualsTitle">位置・図表で対象地をつかむ</h2>
+          <p data-i18n="visualsBody">まず地図で場所を確認し、次に人口構成・資料の厚み・時間帯の違いを見比べる。数値は提案の答えではなく、現地で確かめるための仮説の入口である。</p>
+        </div>
+
+        <div class="visual-grid">
+          <article class="visual-card visual-card-wide map-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow">Google Maps</p>
+                <h3 data-i18n="googleMapTitle">中山駅から雙連駅まで</h3>
+              </div>
+              <span class="visual-badge" data-i18n="googleMapArea">台北市 中山区・大同区</span>
+            </div>
+            <div class="map-frame-wrap">
+              <iframe
+                class="google-map-frame"
+                title="台北市の中山駅周辺地図"
+                src="https://www.google.com/maps?q=Zhongshan+Station+Taipei&amp;output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <p class="visual-note" data-i18n="googleMapNote">埋め込み地図は位置確認用。徒歩ルート、駅出口、現地の最新状況はGoogle Mapsで開いて確認する。</p>
+            <div class="map-actions">
+              <a class="text-action" href="https://www.google.com/maps/search/?api=1&amp;query=Shin+Zhongshan+Linear+Park+Taipei" target="_blank" rel="noreferrer" data-i18n="openAreaMap">心中山周辺を開く ↗</a>
+              <a class="text-action" href="https://www.google.com/maps/dir/?api=1&amp;origin=Zhongshan+Station,+Taipei&amp;destination=Shuanglian+Station,+Taipei&amp;travelmode=walking" target="_blank" rel="noreferrer" data-i18n="openWalkingRoute">徒歩ルートを見る ↗</a>
+            </div>
+          </article>
+
+          <article class="visual-card scale-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow" data-i18n="readingScalesLabel">Reading Scales</p>
+                <h3 data-i18n="scaleTitle">4つのスケールを往復する</h3>
+              </div>
+            </div>
+            <div class="scale-diagram" aria-label="広域から身体スケールへ読む4段階">
+              <div class="scale-step"><strong>1</strong><span data-i18n="scale1Title">台北の都市構造</span><small data-i18n="scale1Body">駅・区・人流</small></div>
+              <div class="scale-line" aria-hidden="true"></div>
+              <div class="scale-step"><strong>2</strong><span data-i18n="scale2Title">心中山の線形公園</span><small data-i18n="scale2Body">約500mの連続空間</small></div>
+              <div class="scale-line" aria-hidden="true"></div>
+              <div class="scale-step"><strong>3</strong><span data-i18n="scale3Title">路地・騎楼・店舗</span><small data-i18n="scale3Body">用途・境界・滞留</small></div>
+              <div class="scale-line" aria-hidden="true"></div>
+              <div class="scale-step"><strong>4</strong><span data-i18n="scale4Title">一人の体験</span><small data-i18n="scale4Body">歩く・休む・働く</small></div>
+            </div>
+            <p class="visual-note" data-i18n="scaleNote">広域の統計だけでも、個別の店舗だけでも提案は作れない。4つのスケールを行き来して、データと観察を重ねる。</p>
+          </article>
+
+          <article class="visual-card chart-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow" data-i18n="peopleDataLabel">People Data</p>
+                <h3 data-i18n="elderChartTitle">里別の高齢化率</h3>
+              </div>
+              <span class="chart-legend"><i class="legend-swatch elder"></i><span data-i18n="age65Plus">65歳以上</span></span>
+            </div>
+            <div id="peopleChart" class="horizontal-chart" aria-label="里別の高齢化率グラフ"></div>
+            <p class="visual-note" data-i18n="elderChartNote">横棒は0–32%の共通スケール。区平均だけでなく、駅周辺と大同区側の里を比較し、高齢者の存在を歩行・休憩・買い物の行動として観察する。</p>
+          </article>
+
+          <article class="visual-card chart-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow" data-i18n="materialCoverageLabel">Material Coverage</p>
+                <h3 data-i18n="coverageTitle">比較できる資料の厚み</h3>
+              </div>
+              <span class="chart-legend"><i class="legend-swatch source"></i><span data-i18n="itemCount">件数</span></span>
+            </div>
+            <div id="sourceChart" class="horizontal-chart" aria-label="サイト内資料の件数グラフ"></div>
+            <p class="visual-note" data-i18n="coverageNote">資料数が多いこと自体が答えではない。自分の問いに合う資料を選び、最後は現地の声・写真・歩行記録で検証する。</p>
+          </article>
+
+          <article class="visual-card timeline-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow" data-i18n="fieldworkLensLabel">Fieldwork Lens</p>
+                <h3 data-i18n="timeTitle">時間帯で見る都市の表情</h3>
+              </div>
+            </div>
+            <div class="time-track">
+              <div class="time-point"><span data-i18n="morning">朝</span><strong data-i18n="morningTitle">生活・通勤</strong><small data-i18n="morningBody">駅、通学、開店準備</small></div>
+              <div class="time-point"><span data-i18n="daytime">昼</span><strong data-i18n="daytimeTitle">回遊・商業</strong><small data-i18n="daytimeBody">赤峰街、文創、ランチ</small></div>
+              <div class="time-point"><span data-i18n="night">夜</span><strong data-i18n="nightTitle">飲食・歓楽</strong><small data-i18n="nightBody">條通、夜間経済、安全</small></div>
+            </div>
+            <p class="visual-note" data-i18n="timeNote">同じ場所でも、時間帯が変わると利用者・音・光・安全感・商業の組み合わせが変わる。調査計画に時間差を入れる。</p>
+          </article>
+
+          <article class="visual-card notebooklm-card">
+            <div class="visual-card-heading">
+              <div>
+                <p class="eyebrow" data-i18n="aiNavigatorLabel">AI Material Navigator</p>
+                <h3 data-i18n="navigatorTitle">資料についてAIに質問する</h3>
+              </div>
+            </div>
+            <p data-i18n="navigatorBody">このサイトは位置とデータを確認する入口。複数の資料を横断して要約・比較・問いづくりをするときは、授業用NotebookLMを使う。</p>
+            <a class="notebooklm-inline-link" href="https://notebooklm.google.com/notebook/938546b5-f85a-4167-93fe-12db027f824c?pli=1" target="_blank" rel="noreferrer" data-i18n="askNotebook">NotebookLMで資料に質問する ↗</a>
+            <p class="visual-note" data-i18n="navigatorNote">Googleアカウントでログインし、回答の引用元と原資料を確認する。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="people" class="content-band">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="peopleDataLabel">People Data</p>
+          <h2 data-i18n="peopleTitle">人のデータ</h2>
+          <p data-i18n="peopleBody">人口、世帯、年齢、所得、産業、交通、地域言説を、提案の相手となる「人」の像に接続する。</p>
+        </div>
+        <div class="split-layout">
+          <div>
+            <h3 data-i18n="keyReadings">主要な読み取り</h3>
+            <div id="peopleInsights" class="insight-list"></div>
+          </div>
+          <div>
+            <h3 data-i18n="boroughData">里別データの入口</h3>
+            <div id="boroughTable" class="data-table-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="space" class="content-band alt">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="spatialDataLabel">Spatial Data</p>
+          <h2 data-i18n="spaceTitle">空間のデータ</h2>
+          <p data-i18n="spaceBody">計画図書、制度、都市更新、歩行空間、公共施設不足、商圏摩擦を、提案の条件として整理する。</p>
+        </div>
+        <div id="spaceCards" class="card-grid"></div>
+      </section>
+
+      <section id="cases" class="content-band">
+        <div class="section-heading inline-heading">
+          <div>
+            <p class="eyebrow" data-i18n="caseWorkspaceLabel">Case Workspace</p>
+            <h2 data-i18n="casesTitle">事例カード</h2>
+            <p data-i18n="casesBody">HILIFEの都市の鍼治療データベースとSSD100を、授業用の読み替え軸つきカードとして横断検索する。</p>
+          </div>
+          <div class="segmented" role="tablist" aria-label="事例種別">
+            <button class="segment active" data-case-filter="all" type="button" data-i18n="all">すべて</button>
+            <button class="segment" data-case-filter="urban" type="button" data-i18n="urbanAcupuncture">都市の鍼治療</button>
+            <button class="segment" data-case-filter="taiwan" type="button" data-i18n="taiwan">台湾</button>
+            <button class="segment" data-case-filter="ssd" type="button">SSD100</button>
+            <button class="segment" data-case-filter="analog" type="button" data-i18n="comparisons">比較候補</button>
+          </div>
+        </div>
+        <p id="caseCount" class="result-note"></p>
+        <div class="case-scroll-frame" aria-label="Scrollable case cards">
+          <div id="caseGrid" class="case-grid"></div>
+        </div>
+      </section>
+
+      <section id="prompts" class="content-band alt">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="promptStudioLabel">AI Prompt Studio</p>
+          <h2 data-i18n="promptsTitle">AIに投げる問い</h2>
+          <p data-i18n="promptsBody">個室AIとプランニングコモンズを往復するための、授業用プロンプト雛形。</p>
+        </div>
+        <div id="promptGrid" class="prompt-grid"></div>
+      </section>
+
+      <section id="fieldwork" class="content-band alt">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="fieldworkCommonsLabel">Fieldwork Commons</p>
+          <h2 data-i18n="uploadTitle">現地調査資料の共有方法を検討中</h2>
+          <p data-i18n="uploadBody">この公開試用版ではアップロードを停止しています。事前授業で必要性と運用方法を確認し、採用する場合は写真・PDF・短い動画を安全に共有できる機能を追加します。</p>
+        </div>
+        <div class="fieldwork-form static-decision-panel">
+          <p class="eyebrow" data-i18n="discussionLabel">Class Discussion</p>
+          <ul class="static-decision-list">
+            <li data-i18n="discussionPoint1">誰がアップロード・改名・削除できるべきか</li>
+            <li data-i18n="discussionPoint2">写真・PDF・動画をどのくらい保存する必要があるか</li>
+            <li data-i18n="discussionPoint3">授業終了後に資料を残すか、削除するか</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="sources" class="content-band">
+        <div class="section-heading inline-heading">
+          <div>
+            <p class="eyebrow" data-i18n="inventoryLabel">Inventory</p>
+            <h2 data-i18n="sourcesTitle">資料インベントリ</h2>
+            <p data-i18n="sourcesBody">授業で参照する資料の所在と用途を一覧化する。配布元はローカルパスではなく、共有用Google Driveフォルダで案内する。</p>
+          </div>
+          <div class="source-count"><span id="sourceCount">0</span> <span data-i18n="itemsUnit">件</span></div>
+        </div>
+        <div class="source-scroll-frame" aria-label="Scrollable source inventory">
+          <div id="sourceList" class="source-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p data-i18n="footerProject">作成対象: グローバル都市地域演習 2026 / 台北市・心中山地区</p>
+      <p data-i18n="footerRights">外部資料は出典明示のうえ、授業内分析のための短い要約として扱う。</p>
+    </footer>
+
+    <a class="notebooklm-launch" href="https://notebooklm.google.com/notebook/938546b5-f85a-4167-93fe-12db027f824c?pli=1" target="_blank" rel="noreferrer" aria-label="授業用NotebookLMを新しいタブで開く">
+      <span class="notebooklm-launch-kicker" data-i18n="notebookKicker">AI資料相談</span>
+      <span class="notebooklm-launch-label" data-i18n="notebookLabel">NotebookLMで質問</span>
+      <span class="notebooklm-launch-arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <script src="case-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
