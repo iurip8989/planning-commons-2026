@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>心中山 Planning Commons</title>
+    <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -105,22 +106,17 @@
           <article class="visual-card visual-card-wide map-card">
             <div class="visual-card-heading">
               <div>
-                <p class="eyebrow">Google Maps</p>
-                <h3 data-i18n="googleMapTitle">中山駅から雙連駅まで</h3>
+                <p class="eyebrow" data-i18n="courseMapLabel">Course Area Map</p>
+                <h3 data-i18n="googleMapTitle">授業対象範囲と重点地点</h3>
               </div>
-              <span class="visual-badge" data-i18n="googleMapArea">台北市 中山区・大同区</span>
+              <span class="visual-badge" data-i18n="googleMapArea">グローバル26 台北マップ</span>
             </div>
             <div class="map-frame-wrap">
-              <iframe
-                class="google-map-frame"
-                title="台北市の中山駅周辺地図"
-                src="https://www.google.com/maps?q=Zhongshan+Station+Taipei&amp;output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+              <div id="courseMap" class="course-map" role="img" aria-label="中山地区中心部、北部、繁華街と重点地点を示す授業対象範囲マップ"></div>
             </div>
-            <p class="visual-note" data-i18n="googleMapNote">埋め込み地図は位置確認用。徒歩ルート、駅出口、現地の最新状況はGoogle Mapsで開いて確認する。</p>
+            <p class="visual-note" data-i18n="googleMapNote">赤色は中山地区中心部、橙色は北部の調査範囲。駅、公園、市場などの重点地点はマーカーで確認できる。</p>
             <div class="map-actions">
-              <a class="text-action" href="https://www.google.com/maps/search/?api=1&amp;query=Shin+Zhongshan+Linear+Park+Taipei" target="_blank" rel="noreferrer" data-i18n="openAreaMap">心中山周辺を開く ↗</a>
+              <a class="text-action" href="https://www.google.com/maps/d/viewer?mid=1RUuVqfW3f_Eju-iag-t9E8GUApfA0Dw" target="_blank" rel="noreferrer" data-i18n="openAreaMap">授業マップを開く ↗</a>
               <a class="text-action" href="https://www.google.com/maps/dir/?api=1&amp;origin=Zhongshan+Station,+Taipei&amp;destination=Shuanglian+Station,+Taipei&amp;travelmode=walking" target="_blank" rel="noreferrer" data-i18n="openWalkingRoute">徒歩ルートを見る ↗</a>
             </div>
           </article>
@@ -297,6 +293,8 @@
     </a>
 
     <script src="case-data.js"></script>
+    <script src="assets/leaflet/leaflet.js"></script>
+    <script src="course-map.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
