@@ -8,7 +8,9 @@
   const MANAGE_TOKENS_KEY = "planning-commons-manage-tokens-v2";
   const UPLOAD_CODE_KEY = "planning-commons-upload-code";
   const ADMIN_CODE_KEY = "planning-commons-admin-code";
+  const HEIC_CONVERTER_URL = "https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.js";
   let items = [];
+  let heicConverterPromise;
 
   function readManageTokens() {
     try {
@@ -211,13 +213,38 @@
     });
   }
 
+  function loadHeicConverter() {
+    if (typeof window.HeicTo === "function") return Promise.resolve(window.HeicTo);
+    if (!heicConverterPromise) {
+      heicConverterPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = HEIC_CONVERTER_URL;
+        script.crossOrigin = "anonymous";
+        script.onload = () => typeof window.HeicTo === "function"
+          ? resolve(window.HeicTo)
+          : reject(new Error(t("imageConversionError")));
+        script.onerror = () => reject(new Error(t("imageConversionError")));
+        document.head.append(script);
+      }).catch((error) => {
+        heicConverterPromise = undefined;
+        throw error;
+      });
+    }
+    return heicConverterPromise;
+  }
+
+  async function convertHeic(file) {
+    const convert = await loadHeicConverter();
+    const result = await convert({ blob: file, type: "image/jpeg", quality: 0.88 });
+    if (!(result instanceof Blob) || !result.size) throw new Error(t("imageConversionError"));
+    return result;
+  }
+
   async function decodeImage(file) {
     let source = file;
     const heic = /\.(heic|heif)$/i.test(file.name) || /image\/hei[cf]/i.test(file.type);
     if (heic) {
-      if (typeof window.heic2any !== "function") throw new Error(t("imageConversionError"));
-      const result = await window.heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 });
-      source = Array.isArray(result) ? result[0] : result;
+      source = await convertHeic(file);
     }
 
     try {
@@ -267,20 +294,65 @@
   async function prepareFile(file) {
     if (isImage(file)) {
       if (file.size > MAX_IMAGE_SOURCE_BYTES) throw new Error(t("fileTooLarge"));
-      const decoded = await decodeImage(file);
+      const heic = /\.(heic|heif)$/i.test(file.name) || /image\/hei[cf]/i.test(file.type);
+      const declaredType = String(file.type || "").toLowerCase();
+      const inferredType = ["image/jpg", "image/pjpeg"].includes(declaredType) ? "image/jpeg" : declaredType || (/\.jpe?g$/i.test(file.name)
+        ? "image/jpeg"
+        : /\.png$/i.test(file.name)
+          ? "image/png"
+          : /\.webp$/i.test(file.name)
+            ? "image/webp"
+            : "");
+      const directlyUploadable = ["image/jpeg", "image/png", "image/webp"].includes(inferredType);
+      const uploadableSource = directlyUploadable && file.type !== inferredType
+        ? new File([file], file.name, { type: inferredType, lastModified: file.lastModified })
+        : file;
+      if (!heic && directlyUploadable && file.size <= THUMBNAIL_TARGET_BYTES) {
+        const thumbnail = inferredType === "image/jpeg"
+          ? new File([uploadableSource], `${file.name.replace(/\.[^.]+$/, "") || "fieldwork-photo"}-thumbnail.jpg`, { type: "image/jpeg" })
+          : null;
+        return { file: uploadableSource, thumbnail, originalName: file.name };
+      }
+      let convertedHeic = null;
+      let decoded;
       try {
-        const [mainBlob, thumbnailBlob] = await Promise.all([
-          encodeImage(decoded, 1920, IMAGE_TARGET_BYTES, 0.86),
-          encodeImage(decoded, 480, THUMBNAIL_TARGET_BYTES, 0.78)
-        ]);
+        if (heic) convertedHeic = await convertHeic(file);
+        const decodeSource = convertedHeic || uploadableSource;
+        decoded = await decodeImage(decodeSource);
+
+        let mainBlob;
+        if (convertedHeic || file.size > IMAGE_TARGET_BYTES) {
+          mainBlob = await encodeImage(decoded, 1920, IMAGE_TARGET_BYTES, 0.86);
+        } else {
+          mainBlob = uploadableSource;
+        }
+
+        let thumbnailBlob = null;
+        try {
+          if (inferredType === "image/jpeg" && file.size <= THUMBNAIL_TARGET_BYTES) {
+            thumbnailBlob = uploadableSource;
+          } else {
+            thumbnailBlob = await encodeImage(decoded, 480, THUMBNAIL_TARGET_BYTES, 0.78);
+          }
+        } catch {
+          // A thumbnail is optional; the original remains available in the library.
+        }
         const baseName = file.name.replace(/\.[^.]+$/, "") || "fieldwork-photo";
+        const reencoded = mainBlob !== uploadableSource;
+        const outputName = reencoded ? `${baseName}.jpg` : file.name;
+        const outputType = reencoded ? "image/jpeg" : inferredType;
         return {
-          file: new File([mainBlob], `${baseName}.jpg`, { type: "image/jpeg", lastModified: file.lastModified }),
-          thumbnail: new File([thumbnailBlob], `${baseName}-thumbnail.jpg`, { type: "image/jpeg" }),
+          file: new File([mainBlob], outputName, { type: outputType, lastModified: file.lastModified }),
+          thumbnail: thumbnailBlob ? new File([thumbnailBlob], `${baseName}-thumbnail.jpg`, { type: "image/jpeg" }) : null,
           originalName: file.name
         };
+      } catch (error) {
+        if (!heic && directlyUploadable && file.size <= 20 * 1024 * 1024) {
+          return { file: uploadableSource, thumbnail: null, originalName: file.name };
+        }
+        throw error;
       } finally {
-        decoded.close();
+        decoded?.close();
       }
     }
 
