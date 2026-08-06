@@ -253,16 +253,135 @@
       <section id="fieldwork" class="content-band alt">
         <div class="section-heading">
           <p class="eyebrow" data-i18n="fieldworkCommonsLabel">Fieldwork Commons</p>
-          <h2 data-i18n="uploadTitle">現地調査資料の共有方法を検討中</h2>
-          <p data-i18n="uploadBody">この公開試用版ではアップロードを停止しています。事前授業で必要性と運用方法を確認し、採用する場合は写真・PDF・短い動画を安全に共有できる機能を追加します。</p>
+          <h2 data-i18n="uploadTitle">現地調査資料を共有する</h2>
+          <p data-i18n="uploadBody">写真は軽量化して保存し、調査日・グループ・観察カテゴリー・地図上の位置で整理する。アップロードした資料はすぐに全員の地図と一覧へ表示される。</p>
         </div>
-        <div class="fieldwork-form static-decision-panel">
-          <p class="eyebrow" data-i18n="discussionLabel">Class Discussion</p>
-          <ul class="static-decision-list">
-            <li data-i18n="discussionPoint1">誰がアップロード・改名・削除できるべきか</li>
-            <li data-i18n="discussionPoint2">写真・PDF・動画をどのくらい保存する必要があるか</li>
-            <li data-i18n="discussionPoint3">授業終了後に資料を残すか、削除するか</li>
-          </ul>
+        <div class="fieldwork-workspace">
+          <form id="fieldworkForm" class="fieldwork-form">
+            <div class="fieldwork-access">
+              <label>
+                <span data-i18n="uploadCode">授業アップロードコード</span>
+                <input id="uploadAccessCode" type="password" autocomplete="off" required data-i18n-placeholder="uploadCodePlaceholder" placeholder="教員から共有されたコード" />
+              </label>
+              <label>
+                <span data-i18n="adminCode">管理コード（教員・STAのみ）</span>
+                <input id="adminAccessCode" type="password" autocomplete="off" data-i18n-placeholder="adminCodePlaceholder" placeholder="通常は空欄で構いません" />
+              </label>
+              <p data-i18n="accessCodeNote">コードはこのタブ内だけに保持され、資料には記録されない。</p>
+            </div>
+
+            <div class="fieldwork-fields">
+              <label>
+                <span data-i18n="studentName">氏名またはニックネーム</span>
+                <input id="studentName" name="studentName" type="text" maxlength="60" required data-i18n-placeholder="studentNamePlaceholder" placeholder="例：山田 / Yu" />
+              </label>
+              <label class="fieldwork-name-field">
+                <span data-i18n="materialName">資料名（任意）</span>
+                <input id="observationName" name="displayName" type="text" maxlength="160" data-i18n-placeholder="materialNamePlaceholder" placeholder="例：赤峰街の歩行空間調査" />
+              </label>
+              <label>
+                <span data-i18n="fieldDate">調査日</span>
+                <input id="fieldDate" name="fieldDate" type="date" required />
+              </label>
+              <label>
+                <span data-i18n="studentGroup">学生グループ</span>
+                <select id="studentGroup" name="studentGroup" required>
+                  <option value="A" data-i18n="groupA">A班</option>
+                  <option value="B" data-i18n="groupB">B班</option>
+                  <option value="C" data-i18n="groupC">C班</option>
+                  <option value="D" data-i18n="groupD">D班</option>
+                  <option value="E" data-i18n="groupE">E班</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="observationCategory">観察カテゴリー</span>
+                <select id="observationCategory" name="observationCategory" required>
+                  <option value="walking" data-i18n="catWalking">歩行空間</option>
+                  <option value="public_space" data-i18n="catPublic">公共空間</option>
+                  <option value="commerce" data-i18n="catCommerce">商業</option>
+                  <option value="transport" data-i18n="catTransport">交通</option>
+                  <option value="community" data-i18n="catCommunity">コミュニティ</option>
+                  <option value="environment" data-i18n="catEnvironment">環境</option>
+                  <option value="other" data-i18n="catOther">その他</option>
+                </select>
+              </label>
+              <label id="otherCategoryField" hidden>
+                <span data-i18n="otherCategory">その他のカテゴリー</span>
+                <input id="otherCategory" name="otherCategory" type="text" maxlength="80" data-i18n-placeholder="otherPlaceholder" placeholder="例：音環境、サインシステム" />
+              </label>
+              <label class="fieldwork-note-field">
+                <span data-i18n="observationNote">観察メモ（任意）</span>
+                <textarea id="observationNote" name="note" rows="3" maxlength="600" data-i18n-placeholder="observationNotePlaceholder" placeholder="何に注目したか、撮影方向、時間帯など"></textarea>
+              </label>
+            </div>
+
+            <div class="location-picker-panel">
+              <div class="location-picker-heading">
+                <div>
+                  <strong data-i18n="selectLocation">撮影・観察地点を地図で選択</strong>
+                  <p id="selectedLocationText" data-i18n="locationHint">地図をクリックして位置を指定してください。</p>
+                </div>
+                <button id="useCurrentLocation" class="observation-clear-button" type="button" data-i18n="useCurrentLocation">現在地を使う</button>
+              </div>
+              <div id="uploadLocationMap" class="fieldwork-location-map" aria-label="Upload location picker"></div>
+              <input id="observationLatitude" name="latitude" type="hidden" required />
+              <input id="observationLongitude" name="longitude" type="hidden" required />
+            </div>
+
+            <div class="upload-dropzone">
+              <input id="fieldworkFiles" name="files" class="native-file-input" type="file" accept="image/*,.heic,.heif,video/mp4,video/quicktime,application/pdf,.pdf" multiple required />
+              <label for="fieldworkFiles" class="custom-file-button" data-i18n="chooseFiles">ファイルを選択</label>
+              <p id="selectedFiles" data-i18n="fileHint">写真は軽量化して保存。PDFは10MB、動画は20MB以下、最大5件。</p>
+            </div>
+            <button id="fieldworkSubmit" class="fieldwork-submit" type="submit" data-i18n="uploadSubmit">アップロードして地図に表示</button>
+            <div class="upload-progress" aria-hidden="true"><span id="uploadProgressBar"></span></div>
+            <p id="fieldworkStatus" class="fieldwork-status" aria-live="polite"></p>
+          </form>
+
+          <div class="observation-library">
+            <div class="observation-library-heading">
+              <div>
+                <p class="eyebrow" data-i18n="uploadedMaterialsLabel">Shared Materials</p>
+                <h3 data-i18n="uploadedMaterials">共有された現地調査資料</h3>
+              </div>
+              <div class="source-count"><span id="observationCount">0</span> <span data-i18n="itemsUnit">件</span></div>
+            </div>
+            <div class="observation-filters" aria-label="Observation filters">
+              <label>
+                <span data-i18n="filterDate">日付で絞り込む</span>
+                <input id="observationDateFilter" type="date" />
+              </label>
+              <label>
+                <span data-i18n="filterGroup">学生グループで絞り込む</span>
+                <select id="observationGroupFilter">
+                  <option value="" data-i18n="allGroups">すべてのグループ</option>
+                  <option value="A" data-i18n="groupA">A班</option>
+                  <option value="B" data-i18n="groupB">B班</option>
+                  <option value="C" data-i18n="groupC">C班</option>
+                  <option value="D" data-i18n="groupD">D班</option>
+                  <option value="E" data-i18n="groupE">E班</option>
+                </select>
+              </label>
+              <label>
+                <span data-i18n="filterCategory">観察カテゴリーで絞り込む</span>
+                <select id="observationCategoryFilter">
+                  <option value="" data-i18n="allCategories">すべてのカテゴリー</option>
+                  <option value="walking" data-i18n="catWalking">歩行空間</option>
+                  <option value="public_space" data-i18n="catPublic">公共空間</option>
+                  <option value="commerce" data-i18n="catCommerce">商業</option>
+                  <option value="transport" data-i18n="catTransport">交通</option>
+                  <option value="community" data-i18n="catCommunity">コミュニティ</option>
+                  <option value="environment" data-i18n="catEnvironment">環境</option>
+                  <option value="other" data-i18n="catOther">その他</option>
+                </select>
+              </label>
+              <button id="observationFiltersClear" class="observation-clear-button" type="button" data-i18n="clearFilters">絞り込みを解除</button>
+            </div>
+            <div id="observationStats" class="observation-stats" aria-live="polite"></div>
+            <div id="fieldworkObservationMap" class="fieldwork-observation-map" aria-label="Shared fieldwork observation map"></div>
+            <p id="observationLibraryStatus" class="fieldwork-status" aria-live="polite"></p>
+            <div id="observationGrid" class="observation-grid"></div>
+          </div>
         </div>
       </section>
 
@@ -281,6 +400,14 @@
       </section>
     </main>
 
+    <dialog id="observationPreviewDialog" class="observation-preview-dialog">
+      <div class="observation-preview-head">
+        <h2 id="observationPreviewTitle"></h2>
+        <button id="observationPreviewClose" class="observation-icon-button" type="button" aria-label="Close preview" data-i18n-aria-label="closePreview">×</button>
+      </div>
+      <div id="observationPreviewBody" class="observation-preview-body"></div>
+    </dialog>
+
     <footer class="site-footer">
       <p data-i18n="footerProject">作成対象: グローバル都市地域演習 2026 / 台北市・心中山地区</p>
       <p data-i18n="footerRights">外部資料は出典明示のうえ、授業内分析のための短い要約として扱う。</p>
@@ -294,7 +421,10 @@
 
     <script src="case-data.js"></script>
     <script src="assets/leaflet/leaflet.js"></script>
-    <script src="course-map.js?v=20260721-map"></script>
-    <script src="app.js?v=20260721-map"></script>
+    <script src="course-map.js?v=20260806-fieldwork"></script>
+    <script src="fieldwork-map.js?v=20260806-fieldwork"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js" crossorigin="anonymous"></script>
+    <script src="fieldwork.js?v=20260806-fieldwork"></script>
+    <script src="app.js?v=20260806-fieldwork"></script>
   </body>
 </html>

@@ -604,6 +604,77 @@ const UI_TEXT = {
   }
 };
 
+const FIELDWORK_TEXT = {
+  ja: {
+    uploadTitle: "現地調査資料を共有する",
+    uploadBody: "写真は軽量化して保存し、調査日・グループ・観察カテゴリー・地図上の位置で整理する。アップロードした資料はすぐに全員の地図と一覧へ表示される。",
+    uploadCode: "授業アップロードコード", uploadCodePlaceholder: "教員から共有されたコード",
+    adminCode: "管理コード（教員・STAのみ）", adminCodePlaceholder: "通常は空欄で構いません",
+    accessCodeNote: "コードはこのタブ内だけに保持され、資料には記録されない。",
+    studentName: "氏名またはニックネーム", studentNamePlaceholder: "例：山田 / Yu",
+    observationNote: "観察メモ（任意）", observationNotePlaceholder: "何に注目したか、撮影方向、時間帯など",
+    selectLocation: "撮影・観察地点を地図で選択", locationHint: "地図をクリックして位置を指定してください。",
+    locationSelected: "選択位置：{lat}, {lng}", useCurrentLocation: "現在地を使う",
+    locationRequired: "地図上で撮影・観察地点を選択してください。", geolocationError: "現在地を取得できませんでした。地図をクリックして指定してください。",
+    fileHint: "写真は軽量化して保存。PDFは10MB、動画は20MB以下、最大5件。",
+    uploadSubmit: "アップロードして地図に表示", uploadedMaterials: "共有された現地調査資料",
+    selectedFiles: "{count}件を選択（合計 {size}）", uploadProgress: "{current} / {total} 件目を処理・アップロード中…",
+    uploadSuccess: "{count}件を保存し、地図と資料一覧に表示しました。", uploadError: "アップロードできませんでした。",
+    uploadCodeRequired: "授業アップロードコードを入力してください。", tooManyFiles: "一度に選択できるのは5件までです。",
+    fileTooLarge: "PDFは10MB以下、動画は20MB以下にしてください。", unsupportedFile: "このファイル形式には対応していません。",
+    imageConversionError: "画像を変換できませんでした。別の画像を選ぶか、端末でJPEGに変換してください。",
+    processingImage: "写真を軽量化しています…", filterSummary: "表示中", groupSummary: "{group}班",
+    managePermissionError: "この資料を変更する権限がありません。アップロードした端末を使うか、教員用管理コードを入力してください。",
+    apiNotReady: "資料庫を準備できませんでした。Cloudflare設定を確認してください。", compressionSaved: "元画像より {percent}% 軽量化",
+  },
+  "zh-Hant": {
+    uploadTitle: "分享實地調查資料",
+    uploadBody: "照片會先輕量化，再依調查日期、組別、觀察類別與地圖位置整理；上傳後會立即顯示在所有人的地圖與清單中。",
+    uploadCode: "課程上傳代碼", uploadCodePlaceholder: "輸入教師提供的代碼",
+    adminCode: "管理代碼（僅教師、STA）", adminCodePlaceholder: "一般使用時可留空",
+    accessCodeNote: "代碼只保留在目前分頁中，不會寫入資料。",
+    studentName: "姓名或暱稱", studentNamePlaceholder: "例：王同學 / Yu",
+    observationNote: "觀察筆記（選填）", observationNotePlaceholder: "關注內容、拍攝方向、時段等",
+    selectLocation: "在地圖上選擇拍攝或觀察位置", locationHint: "請點擊地圖指定位置。",
+    locationSelected: "已選位置：{lat}, {lng}", useCurrentLocation: "使用目前位置",
+    locationRequired: "請在地圖上選擇拍攝或觀察位置。", geolocationError: "無法取得目前位置，請點擊地圖指定。",
+    fileHint: "照片會自動輕量化；PDF 10MB、影片 20MB 以下，一次最多 5 個檔案。",
+    uploadSubmit: "上傳並顯示於地圖", uploadedMaterials: "共享的實地調查資料",
+    selectedFiles: "已選 {count} 個檔案（共 {size}）", uploadProgress: "正在處理並上傳第 {current} / {total} 個檔案…",
+    uploadSuccess: "已儲存 {count} 個檔案並顯示於地圖與資料清單。", uploadError: "無法上傳。",
+    uploadCodeRequired: "請輸入課程上傳代碼。", tooManyFiles: "一次最多選擇 5 個檔案。",
+    fileTooLarge: "PDF 必須小於 10MB，影片必須小於 20MB。", unsupportedFile: "不支援此檔案格式。",
+    imageConversionError: "無法轉換此圖片，請改選其他圖片或先在裝置上轉成 JPEG。",
+    processingImage: "正在輕量化照片…", filterSummary: "目前顯示", groupSummary: "{group}組",
+    managePermissionError: "沒有修改此資料的權限。請使用原上傳裝置，或輸入教師管理代碼。",
+    apiNotReady: "無法準備資料庫，請檢查 Cloudflare 設定。", compressionSaved: "比原圖減少 {percent}%",
+  },
+  en: {
+    uploadTitle: "Share fieldwork material",
+    uploadBody: "Photos are reduced before storage and organized by date, group, observation category, and map location. Uploads appear immediately on the shared map and in the library.",
+    uploadCode: "Class upload code", uploadCodePlaceholder: "Code shared by the teaching team",
+    adminCode: "Admin code (faculty and STA only)", adminCodePlaceholder: "Leave blank for normal use",
+    accessCodeNote: "Codes are kept only in this browser tab and are never stored with the material.",
+    studentName: "Name or nickname", studentNamePlaceholder: "e.g. Yamada / Yu",
+    observationNote: "Observation note (optional)", observationNotePlaceholder: "Focus, camera direction, time of day, etc.",
+    selectLocation: "Select the photo or observation location", locationHint: "Click the map to choose a location.",
+    locationSelected: "Selected: {lat}, {lng}", useCurrentLocation: "Use current location",
+    locationRequired: "Select the photo or observation location on the map.", geolocationError: "Current location is unavailable. Click the map to choose it manually.",
+    fileHint: "Photos are reduced automatically. PDFs up to 10MB, videos up to 20MB, maximum 5 files.",
+    uploadSubmit: "Upload and show on map", uploadedMaterials: "Shared fieldwork material",
+    selectedFiles: "{count} files selected ({size} total)", uploadProgress: "Processing and uploading file {current} of {total}…",
+    uploadSuccess: "Saved {count} files and added them to the map and library.", uploadError: "Upload failed.",
+    uploadCodeRequired: "Enter the class upload code.", tooManyFiles: "Select no more than 5 files at a time.",
+    fileTooLarge: "PDFs must be under 10MB and videos under 20MB.", unsupportedFile: "This file type is not supported.",
+    imageConversionError: "This image could not be converted. Choose another image or convert it to JPEG on your device.",
+    processingImage: "Reducing the photo…", filterSummary: "Showing", groupSummary: "Group {group}",
+    managePermissionError: "You cannot change this item from this device. Use the original upload device or enter the faculty admin code.",
+    apiNotReady: "The fieldwork library could not be prepared. Check the Cloudflare settings.", compressionSaved: "{percent}% smaller than the original",
+  }
+};
+
+Object.entries(FIELDWORK_TEXT).forEach(([language, values]) => Object.assign(UI_TEXT[language], values));
+
 let currentLanguage = "ja";
 let observationItems = [];
 
@@ -1648,7 +1719,7 @@ function init() {
   setupSegments();
   setupCopy();
   setupAiChat();
-  setupFieldworkUpload();
+  window.setupCloudflareFieldwork?.();
   renderAll();
   applyStaticTranslations();
   $("#siteSearch").addEventListener("input", renderAll);

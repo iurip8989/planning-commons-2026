@@ -894,6 +894,46 @@ th {
   gap: 18px;
 }
 
+.fieldwork-workspace {
+  display: grid;
+  gap: 34px;
+}
+
+.fieldwork-access {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #b9d1ce;
+  border-radius: 8px;
+  background: #f0f8f6;
+}
+
+.fieldwork-access label {
+  display: grid;
+  gap: 6px;
+  color: #31424b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fieldwork-access input {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+  border: 1px solid #aac3c0;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.fieldwork-access p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .static-decision-panel {
   max-width: 760px;
 }
@@ -919,12 +959,17 @@ th {
   font-weight: 700;
 }
 
+#otherCategoryField[hidden] {
+  display: none !important;
+}
+
 .fieldwork-fields .fieldwork-name-field {
   grid-column: span 2;
 }
 
 .fieldwork-fields input,
-.fieldwork-fields select {
+.fieldwork-fields select,
+.fieldwork-fields textarea {
   width: 100%;
   min-height: 44px;
   padding: 9px 10px;
@@ -932,6 +977,47 @@ th {
   border-radius: 8px;
   background: #fff;
   color: var(--ink);
+}
+
+.fieldwork-fields textarea {
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.fieldwork-note-field {
+  grid-column: span 2;
+}
+
+.location-picker-panel {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.location-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.location-picker-heading strong {
+  display: block;
+  color: #203842;
+}
+
+.location-picker-heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.fieldwork-location-map {
+  width: 100%;
+  min-height: 330px;
 }
 
 .upload-dropzone {
@@ -997,6 +1083,23 @@ th {
 .fieldwork-submit:disabled {
   cursor: wait;
   opacity: 0.65;
+}
+
+.upload-progress {
+  width: min(520px, 100%);
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe9e7;
+}
+
+.upload-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--teal);
+  transition: width 180ms ease;
 }
 
 .observation-library {
@@ -1065,6 +1168,103 @@ th {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+}
+
+.observation-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.observation-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid #c8d5d9;
+  border-radius: 8px;
+  background: #fff;
+  color: #40525a;
+  font-size: 12px;
+}
+
+.observation-stat strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.fieldwork-observation-map {
+  width: 100%;
+  min-height: 480px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.fieldwork-photo-marker {
+  display: block;
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  border: 3px solid var(--marker-color, var(--teal));
+  border-radius: 50% 50% 50% 4px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(24, 42, 49, 0.28);
+  transform: rotate(-45deg);
+}
+
+.fieldwork-photo-marker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: rotate(45deg) scale(1.18);
+}
+
+.fieldwork-file-marker {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 4px;
+  background: var(--marker-color, var(--teal));
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(24, 42, 49, 0.28);
+  font-size: 12px;
+  font-weight: 800;
+  transform: rotate(-45deg);
+}
+
+.fieldwork-file-marker::first-letter {
+  transform: rotate(45deg);
+}
+
+.map-popup-preview {
+  display: block;
+  width: 180px;
+  height: 112px;
+  margin: -6px -10px 8px;
+  overflow: hidden;
+  border: 0;
+  background: #e9efef;
+  cursor: pointer;
+}
+
+.map-popup-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leaflet-popup-content strong,
+.leaflet-popup-content span {
+  display: block;
+}
+
+.leaflet-popup-content span {
+  margin-top: 3px;
+  color: #586b73;
+  font-size: 11px;
 }
 
 .observation-card {
@@ -1169,6 +1369,13 @@ th {
 .observation-filename span {
   color: #42535b;
   font-weight: 700;
+}
+
+.observation-note {
+  margin: 0;
+  color: #344a53;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .observation-actions {
@@ -1827,6 +2034,10 @@ body.ai-chat-resizing {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .fieldwork-note-field {
+    grid-column: span 2;
+  }
+
   .observation-filters,
   .observation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1848,12 +2059,37 @@ body.ai-chat-resizing {
     justify-items: start;
   }
 
+  .notebooklm-launch {
+    display: none;
+  }
+
   .fieldwork-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldwork-access {
     grid-template-columns: 1fr;
   }
 
   .fieldwork-fields .fieldwork-name-field {
     grid-column: auto;
+  }
+
+  .fieldwork-note-field {
+    grid-column: auto;
+  }
+
+  .location-picker-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .fieldwork-location-map {
+    min-height: 280px;
+  }
+
+  .fieldwork-observation-map {
+    min-height: 420px;
   }
 
   .observation-library-heading {
