@@ -95,6 +95,12 @@
     grid.innerHTML = items.map((item) => {
       const kind = observationKind(item);
       const title = item.displayName || item.originalName;
+      const owner = Boolean(readManageTokens()[item.id]);
+      const adminMode = Boolean(document.getElementById("adminAccessCode")?.value.trim());
+      const managementActions = owner || adminMode
+        ? `<button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>
+           <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(owner ? "ownDelete" : "adminDelete"))}</button>`
+        : "";
       const preview = kind === "image"
         ? `<img src="${encodeURI(item.thumbnailUrl || item.fileUrl)}" alt="${escapeHtml(title)}" loading="lazy" />`
         : `<span class="observation-file-badge">${escapeHtml(t(kind === "video" ? "fileVideo" : kind === "pdf" ? "filePdf" : "fileOther"))}</span>`;
@@ -113,8 +119,7 @@
             <p class="observation-filename"><span>${escapeHtml(t("originalFileName"))}:</span> ${escapeHtml(item.originalName)} · ${escapeHtml(formatSize(item.sizeBytes))}</p>
             <div class="observation-actions">
               <button type="button" data-fieldwork-action="preview" data-id="${escapeHtml(item.id)}">${escapeHtml(t("preview"))}</button>
-              <button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>
-              <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t("delete"))}</button>
+              ${managementActions}
             </div>
           </div>
         </article>`;
@@ -330,7 +335,10 @@
     studentNameInput.value = localStorage.getItem("planning-commons-student-name") || "";
 
     uploadCodeInput.addEventListener("input", () => sessionStorage.setItem(UPLOAD_CODE_KEY, uploadCodeInput.value));
-    adminCodeInput.addEventListener("input", () => sessionStorage.setItem(ADMIN_CODE_KEY, adminCodeInput.value));
+    adminCodeInput.addEventListener("input", () => {
+      sessionStorage.setItem(ADMIN_CODE_KEY, adminCodeInput.value);
+      renderItems();
+    });
     studentNameInput.addEventListener("change", () => localStorage.setItem("planning-commons-student-name", studentNameInput.value.trim()));
 
     category.addEventListener("change", () => {
@@ -485,4 +493,3 @@
     loadItems();
   };
 })();
-

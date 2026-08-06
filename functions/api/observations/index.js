@@ -28,7 +28,7 @@ function validDate(value) {
 }
 
 function validCoordinate(latitude, longitude) {
-  return Number.isFinite(latitude) && Number.isFinite(longitude) && latitude >= 24.8 && latitude <= 25.35 && longitude >= 121.25 && longitude <= 121.85;
+  return Number.isFinite(latitude) && Number.isFinite(longitude) && latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180;
 }
 
 function fileFrom(form, name) {
