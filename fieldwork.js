@@ -11,25 +11,36 @@
   const HEIC_CONVERTER_URL = "https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.js";
   let items = [];
   let heicConverterPromise;
+  let volatileManageTokens = {};
 
   function readManageTokens() {
     try {
-      return JSON.parse(localStorage.getItem(MANAGE_TOKENS_KEY) || "{}") || {};
+      return { ...(JSON.parse(localStorage.getItem(MANAGE_TOKENS_KEY) || "{}") || {}), ...volatileManageTokens };
     } catch {
-      return {};
+      return { ...volatileManageTokens };
     }
   }
 
   function saveManageToken(id, token) {
+    volatileManageTokens[id] = token;
     const tokens = readManageTokens();
     tokens[id] = token;
-    localStorage.setItem(MANAGE_TOKENS_KEY, JSON.stringify(tokens));
+    try {
+      localStorage.setItem(MANAGE_TOKENS_KEY, JSON.stringify(tokens));
+    } catch {
+      // Keep the token in memory so the uploader can still manage it in this tab.
+    }
   }
 
   function removeManageToken(id) {
+    delete volatileManageTokens[id];
     const tokens = readManageTokens();
     delete tokens[id];
-    localStorage.setItem(MANAGE_TOKENS_KEY, JSON.stringify(tokens));
+    try {
+      localStorage.setItem(MANAGE_TOKENS_KEY, JSON.stringify(tokens));
+    } catch {
+      // The server deletion has already succeeded; local cleanup is best effort.
+    }
   }
 
   function observationKind(item) {
@@ -99,10 +110,10 @@
       const title = item.displayName || item.originalName;
       const owner = Boolean(readManageTokens()[item.id]);
       const adminMode = Boolean(document.getElementById("adminAccessCode")?.value.trim());
-      const managementActions = owner || adminMode
-        ? `<button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>
-           <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(owner ? "ownDelete" : "adminDelete"))}</button>`
-        : "";
+      const managementActions = `${owner || adminMode
+        ? `<button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>`
+        : ""}
+        <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(owner ? "ownDelete" : "adminDelete"))}</button>`;
       const preview = kind === "image"
         ? `<img src="${encodeURI(item.thumbnailUrl || item.fileUrl)}" alt="${escapeHtml(title)}" loading="lazy" />`
         : `<span class="observation-file-badge">${escapeHtml(t(kind === "video" ? "fileVideo" : kind === "pdf" ? "filePdf" : "fileOther"))}</span>`;
@@ -402,16 +413,20 @@
     const previewDialog = document.getElementById("observationPreviewDialog");
 
     document.getElementById("fieldDate").value = new Date().toISOString().slice(0, 10);
-    uploadCodeInput.value = sessionStorage.getItem(UPLOAD_CODE_KEY) || "";
-    adminCodeInput.value = sessionStorage.getItem(ADMIN_CODE_KEY) || "";
-    studentNameInput.value = localStorage.getItem("planning-commons-student-name") || "";
+    try { uploadCodeInput.value = sessionStorage.getItem(UPLOAD_CODE_KEY) || ""; } catch { uploadCodeInput.value = ""; }
+    try { adminCodeInput.value = sessionStorage.getItem(ADMIN_CODE_KEY) || ""; } catch { adminCodeInput.value = ""; }
+    try { studentNameInput.value = localStorage.getItem("planning-commons-student-name") || ""; } catch { studentNameInput.value = ""; }
 
-    uploadCodeInput.addEventListener("input", () => sessionStorage.setItem(UPLOAD_CODE_KEY, uploadCodeInput.value));
+    uploadCodeInput.addEventListener("input", () => {
+      try { sessionStorage.setItem(UPLOAD_CODE_KEY, uploadCodeInput.value); } catch {}
+    });
     adminCodeInput.addEventListener("input", () => {
-      sessionStorage.setItem(ADMIN_CODE_KEY, adminCodeInput.value);
+      try { sessionStorage.setItem(ADMIN_CODE_KEY, adminCodeInput.value); } catch {}
       renderItems();
     });
-    studentNameInput.addEventListener("change", () => localStorage.setItem("planning-commons-student-name", studentNameInput.value.trim()));
+    studentNameInput.addEventListener("change", () => {
+      try { localStorage.setItem("planning-commons-student-name", studentNameInput.value.trim()); } catch {}
+    });
 
     category.addEventListener("change", () => {
       const other = category.value === "other";
@@ -532,6 +547,14 @@
           if (!uploadCodeInput.value.trim()) throw new Error(t("uploadCodeRequired"));
           await updateItem(item, { starred: !item.starred }, true);
         } else if (action === "delete") {
+          const owner = Boolean(readManageTokens()[item.id]);
+          const adminCode = adminCodeInput.value.trim();
+          if (!owner && !adminCode) {
+            document.getElementById("observationLibraryStatus").textContent = t("adminCodeRequired");
+            adminCodeInput.focus();
+            adminCodeInput.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+          }
           if (!window.confirm(t("deleteConfirm"))) return;
           const response = await fetch(`/api/observations/${encodeURIComponent(item.id)}`, {
             method: "DELETE",
