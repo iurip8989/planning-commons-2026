@@ -113,7 +113,7 @@
       const managementActions = `${owner || adminMode
         ? `<button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>`
         : ""}
-        <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(owner ? "ownDelete" : "adminDelete"))}</button>`;
+        <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(adminMode ? "adminDelete" : owner ? "ownDelete" : "adminDelete"))}</button>`;
       const preview = kind === "image"
         ? `<img src="${encodeURI(item.thumbnailUrl || item.fileUrl)}" alt="${escapeHtml(title)}" loading="lazy" />`
         : `<span class="observation-file-badge">${escapeHtml(t(kind === "video" ? "fileVideo" : kind === "pdf" ? "filePdf" : "fileOther"))}</span>`;
