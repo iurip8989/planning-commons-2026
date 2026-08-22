@@ -899,6 +899,43 @@ th {
   gap: 34px;
 }
 
+.course-use-guide {
+  padding: 18px;
+  border: 2px solid #bd5a52;
+  border-radius: 8px;
+  background: #fff8f6;
+  color: #273b43;
+}
+
+.course-use-guide h3 {
+  margin: 0 0 14px;
+  color: #8c332f;
+  font-size: 18px;
+}
+
+.course-use-guide-language + .course-use-guide-language {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #dfbbb6;
+}
+
+.course-use-guide-language > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #203842;
+  font-size: 14px;
+}
+
+.course-use-guide-language p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.course-use-guide-language b {
+  color: #8c332f;
+}
+
 .fieldwork-access {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
