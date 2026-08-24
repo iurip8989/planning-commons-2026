@@ -121,6 +121,167 @@
             </div>
           </article>
 
+          <article class="visual-card visual-card-wide research-atlas-card">
+            <div class="visual-card-heading research-atlas-heading">
+              <div>
+                <p class="eyebrow" data-i18n="researchAtlasLabel">District Reading Atlas</p>
+                <h3 data-i18n="researchAtlasTitle">中山―雙連を4つの視点で読む</h3>
+              </div>
+              <span class="visual-badge" data-i18n="researchAtlasBadge">研究資料：2012・2021／現地確認：2026</span>
+            </div>
+
+            <div class="research-tabs" role="tablist" data-i18n-aria-label="researchAtlasTabsLabel" aria-label="地区解读图谱">
+              <button id="researchTabHistory" class="research-tab active" type="button" role="tab" aria-selected="true" aria-controls="researchPanelHistory" data-research-tab="history" data-i18n="researchTabHistory">歴史の重なり</button>
+              <button id="researchTabSpatial" class="research-tab" type="button" role="tab" aria-selected="false" aria-controls="researchPanelSpatial" tabindex="-1" data-research-tab="spatial" data-i18n="researchTabSpatial">空間の交差</button>
+              <button id="researchTabRhythm" class="research-tab" type="button" role="tab" aria-selected="false" aria-controls="researchPanelRhythm" tabindex="-1" data-research-tab="rhythm" data-i18n="researchTabRhythm">時間のリズム</button>
+              <button id="researchTabChecklist" class="research-tab" type="button" role="tab" aria-selected="false" aria-controls="researchPanelChecklist" tabindex="-1" data-research-tab="checklist" data-i18n="researchTabChecklist">現地調査チェック</button>
+            </div>
+
+            <section id="researchPanelHistory" class="research-panel" role="tabpanel" aria-labelledby="researchTabHistory" data-research-panel="history">
+              <div class="history-timeline">
+                <div class="history-stage">
+                  <time>1901–1945</time>
+                  <strong data-i18n="history1Title">植民都市と鉄道</strong>
+                  <span data-i18n="history1Body">勅使街道・大正町の街路骨格、北淡線と雙連の交通機能</span>
+                </div>
+                <div class="history-stage">
+                  <time>1945–1980s</time>
+                  <strong data-i18n="history2Title">消費空間と生産の路地</strong>
+                  <span data-i18n="history2Body">米軍関連サービスと、鉄工・解体・自動車部品産業の併存</span>
+                </div>
+                <div class="history-stage">
+                  <time>1988–2009</time>
+                  <strong data-i18n="history3Title">地下化と文化拠点</strong>
+                  <span data-i18n="history3Body">北淡線の停止・捷運化、文化施設と独立系の仕事場が進出</span>
+                </div>
+                <div class="history-stage">
+                  <time>2010–2019</time>
+                  <strong data-i18n="history4Title">創意群聚と線形再生</strong>
+                  <span data-i18n="history4Body">赤峰街の新旧店舗、R79、2019年完成の心中山線形公園</span>
+                </div>
+                <div class="history-stage">
+                  <time>2020s</time>
+                  <strong data-i18n="history5Title">質と権利の再調整</strong>
+                  <span data-i18n="history5Body">歩行・緑・無障害の改善と、賃料・用途・地域文化の継承</span>
+                </div>
+              </div>
+              <p class="research-reading" data-i18n="historyReading">一つの「文創地区」へ置き換わったのではなく、権力・消費・生産・生活の空間が重なっている。</p>
+            </section>
+
+            <section id="researchPanelSpatial" class="research-panel" role="tabpanel" aria-labelledby="researchTabSpatial" data-research-panel="spatial" hidden>
+              <div class="north-south-axis" aria-label="南北方向の空間区分">
+                <div><b data-i18n="northZone">北部</b><span data-i18n="northZoneBody">商業・回遊</span></div>
+                <div><b data-i18n="middleZone">中部</b><span data-i18n="middleZoneBody">生活・芸術</span></div>
+                <div><b data-i18n="southZone">南部</b><span data-i18n="southZoneBody">交通・待合</span></div>
+              </div>
+              <div class="spatial-cross">
+                <div class="spatial-zone spatial-west">
+                  <span class="spatial-direction" data-i18n="westLabel">西側</span>
+                  <strong data-i18n="westZoneTitle">赤峰街と路地</strong>
+                  <small data-i18n="westZoneBody">伝統零件業、創意商業、住民の日常</small>
+                </div>
+                <div class="spatial-link" aria-hidden="true">↔</div>
+                <div class="spatial-core">
+                  <div class="spatial-zone spatial-ground">
+                    <span class="spatial-direction" data-i18n="groundLabel">地上</span>
+                    <strong data-i18n="groundZoneTitle">線形公園</strong>
+                    <small data-i18n="groundZoneBody">通行・緑陰・滞留・活動</small>
+                  </div>
+                  <div class="vertical-link" aria-hidden="true">↕</div>
+                  <div class="spatial-zone spatial-underground">
+                    <span class="spatial-direction" data-i18n="undergroundLabel">地下</span>
+                    <strong data-i18n="undergroundZoneTitle">中山地下街／R79</strong>
+                    <small data-i18n="undergroundZoneBody">全天候歩行、書店・商業、地上との案内</small>
+                  </div>
+                </div>
+                <div class="spatial-link" aria-hidden="true">↔</div>
+                <div class="spatial-zone spatial-east">
+                  <span class="spatial-direction" data-i18n="eastLabel">東側</span>
+                  <strong data-i18n="eastZoneTitle">林森北路・條通</strong>
+                  <small data-i18n="eastZoneBody">飲食・接待・夜間労働、歴史とスティグマ</small>
+                </div>
+              </div>
+              <p class="research-reading" data-i18n="spatialReading">「連続性」は距離だけでなく、地上―地下、東西、昼夜、異なる利用者の関係として確認する。</p>
+            </section>
+
+            <section id="researchPanelRhythm" class="research-panel" role="tabpanel" aria-labelledby="researchTabRhythm" data-research-panel="rhythm" hidden>
+              <div class="rhythm-matrix" role="table" data-i18n-aria-label="rhythmMatrixLabel" aria-label="平日と休日の利用者变化">
+                <div class="rhythm-cell rhythm-corner" role="columnheader" data-i18n="rhythmCompare">利用の比較</div>
+                <div class="rhythm-cell rhythm-time" role="columnheader" data-i18n="rhythmMorning">午前</div>
+                <div class="rhythm-cell rhythm-time" role="columnheader" data-i18n="rhythmNoon">昼</div>
+                <div class="rhythm-cell rhythm-time" role="columnheader" data-i18n="rhythmAfternoon">午後</div>
+                <div class="rhythm-cell rhythm-time" role="columnheader" data-i18n="rhythmEvening">夕方・夜</div>
+
+                <div class="rhythm-cell rhythm-row-label" role="rowheader" data-i18n="weekday">平日</div>
+                <div class="rhythm-cell"><strong data-i18n="weekdayMorningTitle">中高齢者</strong><span data-i18n="weekdayMorningBody">散歩・休憩</span></div>
+                <div class="rhythm-cell"><strong data-i18n="weekdayNoonTitle">就業者</strong><span data-i18n="weekdayNoonBody">昼休み・短時間滞在</span></div>
+                <div class="rhythm-cell"><strong data-i18n="weekdayAfternoonTitle">青壮年</strong><span data-i18n="weekdayAfternoonBody">回遊・買物・滞留</span></div>
+                <div class="rhythm-cell"><strong data-i18n="weekdayEveningTitle">複数の利用</strong><span data-i18n="weekdayEveningBody">親子、帰宅、飲食、夜間労働</span></div>
+
+                <div class="rhythm-cell rhythm-row-label" role="rowheader" data-i18n="holiday">休日</div>
+                <div class="rhythm-cell rhythm-verify"><strong data-i18n="verifyOnSite">現地確認</strong><span data-i18n="holidayMorningBody">資料が薄い時間帯</span></div>
+                <div class="rhythm-cell"><strong data-i18n="holidayNoonTitle">人出が増加</strong><span data-i18n="holidayNoonBody">昼以降に回遊が拡大</span></div>
+                <div class="rhythm-cell"><strong data-i18n="holidayAfternoonTitle">滞留が多様化</strong><span data-i18n="holidayAfternoonBody">若者・家族・観光</span></div>
+                <div class="rhythm-cell"><strong data-i18n="holidayEveningTitle">中山駅側が高密度</strong><span data-i18n="holidayEveningBody">商業・飲食・イベント</span></div>
+              </div>
+              <p class="research-reading" data-i18n="rhythmReading">2021年前後の技術調査を出発点とし、2026年の現地で利用者・音・光・安全感・物流を再確認する。</p>
+            </section>
+
+            <section id="researchPanelChecklist" class="research-panel" role="tabpanel" aria-labelledby="researchTabChecklist" data-research-panel="checklist" hidden>
+              <div class="checklist-toolbar">
+                <p data-i18n="checklistIntro">班のテーマに合わせて確認項目を選ぶ。チェック状態はこのブラウザだけに保存される。</p>
+                <button id="resetFieldChecklist" class="checklist-reset" type="button" data-i18n="resetChecklist">チェックをリセット</button>
+              </div>
+              <div class="field-check-grid">
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkSpaceUse">空間利用</legend>
+                  <label><input type="checkbox" data-field-check="use-user"><span data-i18n="checkUseUser">利用者・活動</span></label>
+                  <label><input type="checkbox" data-field-check="use-stay"><span data-i18n="checkUseStay">滞在時間</span></label>
+                  <label><input type="checkbox" data-field-check="use-route"><span data-i18n="checkUseRoute">実際の歩行経路</span></label>
+                </fieldset>
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkAccessClimate">無障害・熱環境</legend>
+                  <label><input type="checkbox" data-field-check="access-width"><span data-i18n="checkAccessWidth">有効幅・段差・勾配</span></label>
+                  <label><input type="checkbox" data-field-check="access-shade"><span data-i18n="checkAccessShade">日陰・座席・給水</span></label>
+                  <label><input type="checkbox" data-field-check="access-rain"><span data-i18n="checkAccessRain">雨天動線・水たまり</span></label>
+                </fieldset>
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkIndustryRent">産業・賃貸</legend>
+                  <label><input type="checkbox" data-field-check="industry-type"><span data-i18n="checkIndustryType">伝統業・創意店・飲食</span></label>
+                  <label><input type="checkbox" data-field-check="industry-empty"><span data-i18n="checkIndustryEmpty">空き店舗・用途変化</span></label>
+                  <label><input type="checkbox" data-field-check="industry-voice"><span data-i18n="checkIndustryVoice">賃料・移転理由の聞取</span></label>
+                </fieldset>
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkNetwork">関係者ネットワーク</legend>
+                  <label><input type="checkbox" data-field-check="network-present"><span data-i18n="checkNetworkPresent">参加している主体</span></label>
+                  <label><input type="checkbox" data-field-check="network-missing"><span data-i18n="checkNetworkMissing">不在・見えにくい主体</span></label>
+                  <label><input type="checkbox" data-field-check="network-power"><span data-i18n="checkNetworkPower">誰が議題を決めるか</span></label>
+                </fieldset>
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkCulturePublic">文化と公共性</legend>
+                  <label><input type="checkbox" data-field-check="culture-origin"><span data-i18n="checkCultureOrigin">活動・議題の発案者</span></label>
+                  <label><input type="checkbox" data-field-check="culture-duration"><span data-i18n="checkCultureDuration">参加の継続性</span></label>
+                  <label><input type="checkbox" data-field-check="culture-change"><span data-i18n="checkCultureChange">意見が変えたもの</span></label>
+                </fieldset>
+                <fieldset class="field-check-group">
+                  <legend data-i18n="checkEcologyMaintenance">生態・維持管理</legend>
+                  <label><input type="checkbox" data-field-check="eco-tree"><span data-i18n="checkEcoTree">樹冠・樹勢・土壌</span></label>
+                  <label><input type="checkbox" data-field-check="eco-light"><span data-i18n="checkEcoLight">照明・視線・夜間安全</span></label>
+                  <label><input type="checkbox" data-field-check="eco-owner"><span data-i18n="checkEcoOwner">故障・ごみ・責任主体</span></label>
+                </fieldset>
+              </div>
+              <p class="research-reading" data-i18n="checklistReading">これは事実一覧ではなく、資料が示した論点を現地で確かめるための最小調査セットである。</p>
+            </section>
+
+            <p class="atlas-source-note">
+              <span data-i18n="atlasSourceIntro">主な根拠：</span>
+              <a href="https://www.csat.org.tw/userfiles/131PDF%E7%B7%A8%E8%BC%AF%E6%AA%94%20%281%29%20%28%E4%BF%AE%E5%BE%A9%29.pdf" target="_blank" rel="noreferrer">P1・2012</a>
+              <a href="https://uro.gov.taipei/News_Content.aspx?n=8DFC94E5DFB5C7E7&amp;s=0D4C7D630EE8A849&amp;sms=A74C62B8A64FB3B9" target="_blank" rel="noreferrer">P2・2021</a>
+              <a href="https://doi.org/10.6686/MuseQ.202110_35%284%29.0001" target="_blank" rel="noreferrer">P3・2021</a>
+              <a href="https://www.gov.taipei/News_Content.aspx?n=F0DDAF49B89E9413&amp;s=43084482C93EEA12" target="_blank" rel="noreferrer" data-i18n="official2026Source">2026年公式情報</a>
+            </p>
+          </article>
+
           <article class="visual-card scale-card">
             <div class="visual-card-heading">
               <div>
@@ -162,21 +323,6 @@
             </div>
             <div id="sourceChart" class="horizontal-chart" aria-label="サイト内資料の件数グラフ"></div>
             <p class="visual-note" data-i18n="coverageNote">資料数が多いこと自体が答えではない。自分の問いに合う資料を選び、最後は現地の声・写真・歩行記録で検証する。</p>
-          </article>
-
-          <article class="visual-card timeline-card">
-            <div class="visual-card-heading">
-              <div>
-                <p class="eyebrow" data-i18n="fieldworkLensLabel">Fieldwork Lens</p>
-                <h3 data-i18n="timeTitle">時間帯で見る都市の表情</h3>
-              </div>
-            </div>
-            <div class="time-track">
-              <div class="time-point"><span data-i18n="morning">朝</span><strong data-i18n="morningTitle">生活・通勤</strong><small data-i18n="morningBody">駅、通学、開店準備</small></div>
-              <div class="time-point"><span data-i18n="daytime">昼</span><strong data-i18n="daytimeTitle">回遊・商業</strong><small data-i18n="daytimeBody">赤峰街、文創、ランチ</small></div>
-              <div class="time-point"><span data-i18n="night">夜</span><strong data-i18n="nightTitle">飲食・歓楽</strong><small data-i18n="nightBody">條通、夜間経済、安全</small></div>
-            </div>
-            <p class="visual-note" data-i18n="timeNote">同じ場所でも、時間帯が変わると利用者・音・光・安全感・商業の組み合わせが変わる。調査計画に時間差を入れる。</p>
           </article>
 
           <article class="visual-card notebooklm-card">

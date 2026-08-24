@@ -1,7 +1,7 @@
 const metrics = [
   { label: "中山区人口", value: "211,011", note: "2026年5月。女性人口が多い都心区。" },
   { label: "高齢化率", value: "25.6%", note: "65歳以上。台北市平均を上回る。" },
-  { label: "線形公園", value: "500m", note: "中山駅から雙連駅へ続く帯状空間。" },
+  { label: "授業中心区間", value: "約500m", note: "中山駅―雙連駅間。線形公園全体は公式発表で約800m。" },
   { label: "商業登記", value: "8,587", note: "台北市12区で最多。小売・飲食が突出。" }
 ];
 
@@ -379,6 +379,13 @@ const sources = [
     driveRef: "人のデータ_PeopleData / 心中山_地域特色・在地言説プロファイル.docx"
   },
   {
+    type: "DOCX",
+    title: "台北中山―雙連地区 都市空間・文化ガバナンス・都市再生研究レビュー",
+    summary: "歴史の重層、創意群聚、線形公園と地下街、文化的公共圏、再生の便益と排除リスク、現地調査指標を一次・二次資料の強度を分けて整理した補充研究。",
+    tags: ["歴史", "公共空間", "コミュニティ"],
+    driveRef: "補充資料 / 台北中山—双连地区城市空间与都市再生研究综述.docx"
+  },
+  {
     type: "MD",
     title: "PeopleData README",
     summary: "人のデータ収集フォルダの構成、進捗、統計・文献収集方針、AI汇总への接続を示す。",
@@ -604,6 +611,38 @@ const UI_TEXT = {
   }
 };
 
+const RESEARCH_TEXT = {
+  ja: {
+    researchAtlasLabel: "地区解読アトラス", researchAtlasTitle: "中山―雙連を4つの視点で読む", researchAtlasBadge: "研究資料：2012・2021／現地確認：2026", researchAtlasTabsLabel: "地区解読アトラスの表示切替",
+    researchTabHistory: "歴史の重なり", researchTabSpatial: "空間の交差", researchTabRhythm: "時間のリズム", researchTabChecklist: "現地調査チェック",
+    history1Title: "植民都市と鉄道", history1Body: "勅使街道・大正町の街路骨格、北淡線と雙連の交通機能", history2Title: "消費空間と生産の路地", history2Body: "米軍関連サービスと、鉄工・解体・自動車部品産業の併存", history3Title: "地下化と文化拠点", history3Body: "北淡線の停止・捷運化、文化施設と独立系の仕事場が進出", history4Title: "創意群聚と線形再生", history4Body: "赤峰街の新旧店舗、R79、2019年完成の心中山線形公園", history5Title: "質と権利の再調整", history5Body: "歩行・緑・無障害の改善と、賃料・用途・地域文化の継承", historyReading: "一つの「文創地区」へ置き換わったのではなく、権力・消費・生産・生活の空間が重なっている。",
+    northZone: "北部", northZoneBody: "商業・回遊", middleZone: "中部", middleZoneBody: "生活・芸術", southZone: "南部", southZoneBody: "交通・待合", westLabel: "西側", westZoneTitle: "赤峰街と路地", westZoneBody: "伝統零件業、創意商業、住民の日常", groundLabel: "地上", groundZoneTitle: "線形公園", groundZoneBody: "通行・緑陰・滞留・活動", undergroundLabel: "地下", undergroundZoneTitle: "中山地下街／R79", undergroundZoneBody: "全天候歩行、書店・商業、地上との案内", eastLabel: "東側", eastZoneTitle: "林森北路・條通", eastZoneBody: "飲食・接待・夜間労働、歴史とスティグマ", spatialReading: "「連続性」は距離だけでなく、地上―地下、東西、昼夜、異なる利用者の関係として確認する。",
+    rhythmMatrixLabel: "平日と休日の時間帯別利用者", rhythmCompare: "利用の比較", rhythmMorning: "午前", rhythmNoon: "昼", rhythmAfternoon: "午後", rhythmEvening: "夕方・夜", weekday: "平日", holiday: "休日", weekdayMorningTitle: "中高齢者", weekdayMorningBody: "散歩・休憩", weekdayNoonTitle: "就業者", weekdayNoonBody: "昼休み・短時間滞在", weekdayAfternoonTitle: "青壮年", weekdayAfternoonBody: "回遊・買物・滞留", weekdayEveningTitle: "複数の利用", weekdayEveningBody: "親子、帰宅、飲食、夜間労働", verifyOnSite: "現地確認", holidayMorningBody: "資料が薄い時間帯", holidayNoonTitle: "人出が増加", holidayNoonBody: "昼以降に回遊が拡大", holidayAfternoonTitle: "滞留が多様化", holidayAfternoonBody: "若者・家族・観光", holidayEveningTitle: "中山駅側が高密度", holidayEveningBody: "商業・飲食・イベント", rhythmReading: "2021年前後の技術調査を出発点とし、2026年の現地で利用者・音・光・安全感・物流を再確認する。",
+    checklistIntro: "班のテーマに合わせて確認項目を選ぶ。チェック状態はこのブラウザだけに保存される。", resetChecklist: "チェックをリセット", checkSpaceUse: "空間利用", checkUseUser: "利用者・活動", checkUseStay: "滞在時間", checkUseRoute: "実際の歩行経路", checkAccessClimate: "無障害・熱環境", checkAccessWidth: "有効幅・段差・勾配", checkAccessShade: "日陰・座席・給水", checkAccessRain: "雨天動線・水たまり", checkIndustryRent: "産業・賃貸", checkIndustryType: "伝統業・創意店・飲食", checkIndustryEmpty: "空き店舗・用途変化", checkIndustryVoice: "賃料・移転理由の聞取", checkNetwork: "関係者ネットワーク", checkNetworkPresent: "参加している主体", checkNetworkMissing: "不在・見えにくい主体", checkNetworkPower: "誰が議題を決めるか", checkCulturePublic: "文化と公共性", checkCultureOrigin: "活動・議題の発案者", checkCultureDuration: "参加の継続性", checkCultureChange: "意見が変えたもの", checkEcologyMaintenance: "生態・維持管理", checkEcoTree: "樹冠・樹勢・土壌", checkEcoLight: "照明・視線・夜間安全", checkEcoOwner: "故障・ごみ・責任主体", checklistReading: "これは事実一覧ではなく、資料が示した論点を現地で確かめるための最小調査セットである。",
+    atlasSourceIntro: "主な根拠：", official2026Source: "2026年公式情報"
+  },
+  "zh-Hant": {
+    researchAtlasLabel: "地區解讀圖譜", researchAtlasTitle: "以四種視角閱讀中山—雙連", researchAtlasBadge: "研究資料：2012、2021／現地確認：2026", researchAtlasTabsLabel: "切換地區解讀圖譜",
+    researchTabHistory: "歷史疊層", researchTabSpatial: "空間交會", researchTabRhythm: "時間節奏", researchTabChecklist: "現地調查檢核",
+    history1Title: "殖民城市與鐵路", history1Body: "敕使街道、大正町街廓骨架，北淡線與雙連交通機能", history2Title: "消費空間與生產巷弄", history2Body: "美軍相關服務業與打鐵、拆解、汽車零件產業並存", history3Title: "地下化與文化節點", history3Body: "北淡線停駛與捷運化，文化設施及獨立工作空間進駐", history4Title: "創意群聚與線形再生", history4Body: "赤峰街新舊店家、R79與2019年完成的心中山線形公園", history5Title: "空間品質與權利再平衡", history5Body: "改善步行、綠地與無障礙，同時面對租金、使用與文化延續", historyReading: "這裡不是被單一「文創街區」取代，而是權力、消費、生產與日常生活空間持續疊合。",
+    northZone: "北段", northZoneBody: "商業・遊逛", middleZone: "中段", middleZoneBody: "生活・藝術", southZone: "南段", southZoneBody: "轉運・等候", westLabel: "西側", westZoneTitle: "赤峰街與巷弄", westZoneBody: "傳統零件業、創意商業與居民日常", groundLabel: "地上", groundZoneTitle: "線形公園", groundZoneBody: "通行、綠蔭、停留與活動", undergroundLabel: "地下", undergroundZoneTitle: "中山地下街／R79", undergroundZoneBody: "全天候步行、書店商業與地上導引", eastLabel: "東側", eastZoneTitle: "林森北路・條通", eastZoneBody: "餐飲、接待與夜間勞動，歷史和污名並存", spatialReading: "「連續性」不只是距離，也要檢查地上與地下、東西兩側、晝夜以及不同使用者之間的關係。",
+    rhythmMatrixLabel: "平日與假日的分時使用者", rhythmCompare: "使用比較", rhythmMorning: "上午", rhythmNoon: "中午", rhythmAfternoon: "下午", rhythmEvening: "傍晚・夜間", weekday: "平日", holiday: "假日", weekdayMorningTitle: "中高齡者", weekdayMorningBody: "散步・休息", weekdayNoonTitle: "上班族", weekdayNoonBody: "午休・短暫停留", weekdayAfternoonTitle: "青壯年", weekdayAfternoonBody: "遊逛・購物・停留", weekdayEveningTitle: "多種使用者", weekdayEveningBody: "親子、返家、餐飲、夜間勞動", verifyOnSite: "現地確認", holidayMorningBody: "現有資料較少的時段", holidayNoonTitle: "人潮開始增加", holidayNoonBody: "中午後遊逛範圍擴大", holidayAfternoonTitle: "停留更加多元", holidayAfternoonBody: "年輕人、家庭與觀光", holidayEveningTitle: "中山站側較密集", holidayEveningBody: "商業、餐飲與活動", rhythmReading: "以2021年前後的技術調查為起點，於2026年現地重新確認使用者、聲音、光線、安全感與物流。",
+    checklistIntro: "依各組主題選擇檢核項目；勾選狀態只儲存在目前瀏覽器。", resetChecklist: "重設勾選", checkSpaceUse: "空間使用", checkUseUser: "使用者與活動", checkUseStay: "停留時間", checkUseRoute: "實際步行路徑", checkAccessClimate: "無障礙・熱舒適", checkAccessWidth: "有效寬度、段差與坡度", checkAccessShade: "遮蔭、座椅與飲水", checkAccessRain: "雨天動線與積水", checkIndustryRent: "產業・租賃", checkIndustryType: "傳統產業、創意店與餐飲", checkIndustryEmpty: "空店與用途變化", checkIndustryVoice: "租金與遷出原因訪談", checkNetwork: "關係人網絡", checkNetworkPresent: "已參與的行動者", checkNetworkMissing: "缺席或不易看見的行動者", checkNetworkPower: "誰有議題設定權", checkCulturePublic: "文化與公共性", checkCultureOrigin: "活動與議題發起者", checkCultureDuration: "參與是否持續", checkCultureChange: "意見實際改變了什麼", checkEcologyMaintenance: "生態・維護", checkEcoTree: "樹冠、樹勢與土壤", checkEcoLight: "照明、視線與夜間安全", checkEcoOwner: "故障、垃圾與責任單位", checklistReading: "這不是事實清單，而是把資料中的論點帶到現地核驗的最小調查組合。",
+    atlasSourceIntro: "主要依據：", official2026Source: "2026年官方資訊"
+  },
+  en: {
+    researchAtlasLabel: "District reading atlas", researchAtlasTitle: "Read Zhongshan–Shuanglian through four lenses", researchAtlasBadge: "Research: 2012 & 2021 / field check: 2026", researchAtlasTabsLabel: "Switch district reading atlas view",
+    researchTabHistory: "Layered history", researchTabSpatial: "Spatial intersections", researchTabRhythm: "Daily rhythms", researchTabChecklist: "Fieldwork checklist",
+    history1Title: "Colonial city and railway", history1Body: "Imperial avenue, Taishō-chō street grid, Tamsui railway and Shuanglian interchange", history2Title: "Consumer spaces and productive lanes", history2Body: "US-related services alongside metalwork, dismantling and auto-parts industries", history3Title: "Underground transition and cultural nodes", history3Body: "Railway closure and MRT conversion, followed by cultural venues and independent workspaces", history4Title: "Creative clustering and linear regeneration", history4Body: "Old and new Chifeng shops, R79 and the Heart of Zhongshan linear park completed in 2019", history5Title: "Rebalancing quality and rights", history5Body: "Better walking, greenery and accessibility alongside rent, land-use and cultural-continuity concerns", historyReading: "The area was not replaced by a single creative district; spaces of power, consumption, production and everyday life remain layered.",
+    northZone: "North", northZoneBody: "Commerce · circulation", middleZone: "Middle", middleZoneBody: "Daily life · art", southZone: "South", southZoneBody: "Transfer · waiting", westLabel: "West", westZoneTitle: "Chifeng Street and lanes", westZoneBody: "Traditional parts trade, creative commerce and residents' daily life", groundLabel: "Ground", groundZoneTitle: "Linear park", groundZoneBody: "Movement, shade, staying and events", undergroundLabel: "Underground", undergroundZoneTitle: "Zhongshan Metro Mall / R79", undergroundZoneBody: "All-weather walking, books and retail, wayfinding to street level", eastLabel: "East", eastZoneTitle: "Linsen North Road and Tiaotong", eastZoneBody: "Food, hospitality and night labor, with layered memory and stigma", spatialReading: "Continuity should be checked not only as distance, but across ground and underground, east and west, day and night, and different users.",
+    rhythmMatrixLabel: "Users by time on weekdays and holidays", rhythmCompare: "Comparison", rhythmMorning: "Morning", rhythmNoon: "Noon", rhythmAfternoon: "Afternoon", rhythmEvening: "Evening · night", weekday: "Weekday", holiday: "Holiday", weekdayMorningTitle: "Middle-aged and older users", weekdayMorningBody: "Walking · resting", weekdayNoonTitle: "Workers", weekdayNoonBody: "Lunch break · short stays", weekdayAfternoonTitle: "Younger adults", weekdayAfternoonBody: "Circulation · shopping · staying", weekdayEveningTitle: "Multiple user groups", weekdayEveningBody: "Families, return trips, dining, night labor", verifyOnSite: "Verify on site", holidayMorningBody: "A time with limited source evidence", holidayNoonTitle: "Footfall increases", holidayNoonBody: "Circulation expands after noon", holidayAfternoonTitle: "More diverse stays", holidayAfternoonBody: "Young people, families and visitors", holidayEveningTitle: "Denser near Zhongshan Station", holidayEveningBody: "Commerce, dining and events", rhythmReading: "Use the 2021-era technical survey as a baseline, then recheck users, sound, light, perceived safety and logistics on site in 2026.",
+    checklistIntro: "Select checks that fit your group theme. Progress is saved only in this browser.", resetChecklist: "Reset checks", checkSpaceUse: "Space use", checkUseUser: "Users and activities", checkUseStay: "Length of stay", checkUseRoute: "Actual walking routes", checkAccessClimate: "Access and thermal comfort", checkAccessWidth: "Clear width, level changes and slopes", checkAccessShade: "Shade, seating and drinking water", checkAccessRain: "Rain routes and ponding", checkIndustryRent: "Industry and rent", checkIndustryType: "Traditional, creative and food businesses", checkIndustryEmpty: "Vacancies and changes of use", checkIndustryVoice: "Interviews on rent and relocation", checkNetwork: "Stakeholder network", checkNetworkPresent: "Actors who participate", checkNetworkMissing: "Absent or less visible actors", checkNetworkPower: "Who sets the agenda", checkCulturePublic: "Culture and publicness", checkCultureOrigin: "Who initiates activities and issues", checkCultureDuration: "Continuity of participation", checkCultureChange: "What participation actually changed", checkEcologyMaintenance: "Ecology and maintenance", checkEcoTree: "Canopy, tree health and soil", checkEcoLight: "Lighting, sightlines and night safety", checkEcoOwner: "Faults, waste and responsible body", checklistReading: "This is not a list of facts. It is a minimum set for testing issues raised by the sources in the field.",
+    atlasSourceIntro: "Primary evidence:", official2026Source: "2026 official update"
+  }
+};
+
+Object.entries(RESEARCH_TEXT).forEach(([language, values]) => Object.assign(UI_TEXT[language], values));
+
 const FIELDWORK_TEXT = {
   ja: {
     uploadTitle: "現地調査資料を共有する",
@@ -706,7 +745,7 @@ const CONTENT_TEXT = {
     metrics: [
       { label: "中山區人口", note: "2026 年 5 月。女性人口較多的都心行政區。" },
       { label: "高齡化率", note: "65 歲以上人口比例，高於臺北市平均。" },
-      { label: "線形公園", note: "從中山站延伸至雙連站的帶狀空間。" },
+      { label: "課程核心區間", note: "中山站至雙連站約 500 公尺；官方公布線形公園全長約 800 公尺。" },
       { label: "商業登記", note: "臺北市 12 區最多，零售與餐飲尤其集中。" }
     ],
     peopleInsights: [
@@ -737,7 +776,7 @@ const CONTENT_TEXT = {
     metrics: [
       { label: "Zhongshan District population", note: "May 2026. A central district with a larger female population." },
       { label: "Ageing rate", note: "Residents aged 65+, above the Taipei average." },
-      { label: "Linear park", note: "A band of public space linking Zhongshan and Shuanglian stations." },
+      { label: "Course core segment", note: "About 500 m from Zhongshan to Shuanglian; the officially stated full park is about 800 m." },
       { label: "Registered businesses", note: "The highest count among Taipei's 12 districts, led by retail and food service." }
     ],
     peopleInsights: [
@@ -1189,6 +1228,60 @@ function setupSegments() {
       button.classList.add("active");
       renderAll();
     });
+  });
+}
+
+function setupResearchAtlas() {
+  const tabs = [...document.querySelectorAll("[data-research-tab]")];
+  const panels = [...document.querySelectorAll("[data-research-panel]")];
+  if (!tabs.length || !panels.length) return;
+
+  function activateResearchPanel(name, moveFocus = false) {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.researchTab === name;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && moveFocus) tab.focus();
+    });
+    panels.forEach((panel) => {
+      panel.hidden = panel.dataset.researchPanel !== name;
+    });
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => activateResearchPanel(tab.dataset.researchTab));
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = tabs.length - 1;
+      activateResearchPanel(tabs[nextIndex].dataset.researchTab, true);
+    });
+  });
+
+  const storageKey = "planning-commons-field-checklist";
+  const checks = [...document.querySelectorAll("[data-field-check]")];
+  let savedChecks = [];
+  try {
+    savedChecks = JSON.parse(localStorage.getItem(storageKey) || "[]");
+  } catch {
+    savedChecks = [];
+  }
+  checks.forEach((check) => {
+    check.checked = savedChecks.includes(check.dataset.fieldCheck);
+    check.addEventListener("change", () => {
+      const selected = checks.filter((item) => item.checked).map((item) => item.dataset.fieldCheck);
+      localStorage.setItem(storageKey, JSON.stringify(selected));
+    });
+  });
+
+  $("#resetFieldChecklist")?.addEventListener("click", () => {
+    checks.forEach((check) => { check.checked = false; });
+    localStorage.removeItem(storageKey);
   });
 }
 
@@ -1726,6 +1819,7 @@ function setupFieldworkUpload() {
 function init() {
   setupLanguage();
   setupSegments();
+  setupResearchAtlas();
   setupCopy();
   setupAiChat();
   window.setupCloudflareFieldwork?.();
