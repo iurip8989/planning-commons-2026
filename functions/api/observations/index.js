@@ -43,10 +43,12 @@ export async function onRequestGet({ request, env }) {
     const fieldDate = url.searchParams.get("date")?.trim() || "";
     const groupCode = url.searchParams.get("group")?.trim() || "";
     const category = url.searchParams.get("category")?.trim() || "";
+    const materialName = url.searchParams.get("name")?.trim() || "";
 
     if (fieldDate && !validDate(fieldDate)) return json({ error: "Invalid date filter." }, 400);
     if (groupCode && !GROUPS.has(groupCode)) return json({ error: "Invalid group filter." }, 400);
     if (category && !CATEGORIES.has(category)) return json({ error: "Invalid category filter." }, 400);
+    if (materialName.length > 240) return json({ error: "Invalid material name filter." }, 400);
 
     const conditions = ["review_status = 'visible'"];
     const values = [];
@@ -61,6 +63,10 @@ export async function onRequestGet({ request, env }) {
     if (category) {
       conditions.push("category = ?");
       values.push(category);
+    }
+    if (materialName) {
+      conditions.push("COALESCE(NULLIF(TRIM(display_name), ''), original_name) = ?");
+      values.push(materialName);
     }
 
     const statement = env.DB.prepare(`SELECT

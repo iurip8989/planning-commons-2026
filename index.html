@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>心中山 Planning Commons</title>
     <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="styles.css?v=20260822-guide" />
+    <link rel="stylesheet" href="styles.css?v=20260829-fieldwork-summary-edit" />
   </head>
   <body>
     <header class="topbar">
@@ -538,6 +538,23 @@
               <button id="observationFiltersClear" class="observation-clear-button" type="button" data-i18n="clearFilters">絞り込みを解除</button>
             </div>
             <div id="observationStats" class="observation-stats" aria-live="polite"></div>
+            <section id="observationSummary" class="observation-summary" aria-labelledby="observationSummaryTitle">
+              <div class="observation-summary-heading">
+                <div>
+                  <p class="eyebrow" data-i18n="summaryLabel">集計・分類</p>
+                  <h4 id="observationSummaryTitle" data-i18n="summaryTitle">アップロード資料を数量で見る</h4>
+                </div>
+                <p id="observationSummaryScope" class="observation-summary-scope" aria-live="polite"></p>
+              </div>
+              <div class="observation-summary-tabs" role="tablist" aria-label="Summary views" data-i18n-aria-label="summaryTabsLabel">
+                <button class="active" type="button" role="tab" aria-selected="true" data-summary-tab="categories" data-i18n="summaryCategoryTab">観察カテゴリー</button>
+                <button type="button" role="tab" aria-selected="false" data-summary-tab="materialNames" data-i18n="summaryNameTab">資料名</button>
+                <button type="button" role="tab" aria-selected="false" data-summary-tab="dates" data-i18n="summaryDateTab">調査日</button>
+              </div>
+              <div id="observationSummaryBody" class="observation-summary-body" role="tabpanel" aria-live="polite">
+                <p class="observation-summary-message" data-i18n="summaryLoading">集計を読み込んでいます…</p>
+              </div>
+            </section>
             <div id="fieldworkObservationMap" class="fieldwork-observation-map" aria-label="Shared fieldwork observation map"></div>
             <p id="observationLibraryStatus" class="fieldwork-status" aria-live="polite"></p>
             <div id="observationGrid" class="observation-grid"></div>
@@ -568,6 +585,35 @@
       <div id="observationPreviewBody" class="observation-preview-body"></div>
     </dialog>
 
+    <dialog id="observationEditDialog" class="observation-edit-dialog">
+      <form id="observationEditForm">
+        <div class="observation-preview-head">
+          <h2 id="observationEditTitle" data-i18n="editDialogTitle">資料を編集</h2>
+          <button id="observationEditClose" class="observation-icon-button" type="button" aria-label="Close editor" data-i18n-aria-label="editCancel">×</button>
+        </div>
+        <div class="observation-edit-body">
+          <label>
+            <span data-i18n="editMaterialName">資料名</span>
+            <input id="observationEditName" type="text" maxlength="160" required />
+          </label>
+          <label>
+            <span data-i18n="editDescription">画像の説明</span>
+            <textarea id="observationEditNote" rows="4" maxlength="600" data-i18n-placeholder="editDescriptionPlaceholder" placeholder="観察内容、撮影方向、時間帯、インタビューの要点など"></textarea>
+          </label>
+          <div class="observation-edit-location">
+            <strong data-i18n="editLocationTitle">地図上の位置を調整</strong>
+            <p id="observationEditLocationText" data-i18n="editLocationHint">地図をクリックするか、マーカーをドラッグしてください。</p>
+            <div id="editLocationMap" class="fieldwork-edit-map" aria-label="Edit observation location" data-i18n-aria-label="editLocationTitle"></div>
+          </div>
+          <p id="observationEditStatus" class="fieldwork-status" aria-live="polite"></p>
+          <div class="observation-edit-actions">
+            <button id="observationEditCancel" class="observation-clear-button" type="button" data-i18n="editCancel">キャンセル</button>
+            <button id="observationEditSave" class="fieldwork-submit" type="submit" data-i18n="editSave">変更を保存</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
     <footer class="site-footer">
       <p data-i18n="footerProject">作成対象: グローバル都市地域演習 2026 / 台北市・心中山地区</p>
       <p data-i18n="footerRights">外部資料は出典明示のうえ、授業内分析のための短い要約として扱う。</p>
@@ -582,8 +628,8 @@
     <script src="case-data.js"></script>
     <script src="assets/leaflet/leaflet.js"></script>
     <script src="course-map.js?v=20260806-fieldwork"></script>
-    <script src="fieldwork-map.js?v=20260806-fieldwork"></script>
-    <script src="fieldwork.js?v=20260808-compact"></script>
-    <script src="app.js?v=20260808-controls"></script>
+    <script src="fieldwork-map.js?v=20260829-fieldwork-summary-edit"></script>
+    <script src="fieldwork.js?v=20260829-fieldwork-summary-edit"></script>
+    <script src="app.js?v=20260829-fieldwork-summary-edit"></script>
   </body>
 </html>

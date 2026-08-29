@@ -83,13 +83,17 @@
 
   const pickerTarget = document.getElementById("uploadLocationMap");
   const observationTarget = document.getElementById("fieldworkObservationMap");
+  const editTarget = document.getElementById("editLocationMap");
   if (!pickerTarget || !observationTarget) return;
 
   const pickerMap = baseMap(pickerTarget);
   const observationMap = baseMap(observationTarget);
+  const editMap = editTarget ? baseMap(editTarget) : null;
   const observationLayer = L.layerGroup().addTo(observationMap);
   let selectedMarker;
   let selectedLocation = null;
+  let editMarker;
+  let editLocation = null;
 
   function emitLocation() {
     window.dispatchEvent(new CustomEvent("fieldwork-location-change", { detail: selectedLocation }));
@@ -115,6 +119,39 @@
   }
 
   pickerMap.on("click", (event) => setSelectedLocation(event.latlng.lat, event.latlng.lng, { pan: false }));
+
+  function emitEditLocation() {
+    window.dispatchEvent(new CustomEvent("fieldwork-edit-location-change", { detail: editLocation }));
+  }
+
+  function setEditLocation(latitude, longitude, options = {}) {
+    if (!editMap) return;
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    editLocation = { latitude: lat, longitude: lng };
+    if (!editMarker) {
+      editMarker = L.marker([lat, lng], { draggable: true }).addTo(editMap);
+      editMarker.on("dragend", () => {
+        const position = editMarker.getLatLng();
+        editLocation = { latitude: position.lat, longitude: position.lng };
+        emitEditLocation();
+      });
+    } else {
+      editMarker.setLatLng([lat, lng]);
+    }
+    if (options.pan !== false) editMap.setView([lat, lng], Math.max(editMap.getZoom(), 17));
+    emitEditLocation();
+  }
+
+  function clearEditLocation() {
+    editLocation = null;
+    if (editMap && editMarker) editMap.removeLayer(editMarker);
+    editMarker = undefined;
+    emitEditLocation();
+  }
+
+  editMap?.on("click", (event) => setEditLocation(event.latlng.lat, event.latlng.lng, { pan: false }));
 
   function photoIcon(item) {
     const color = categoryColors[item.category] || categoryColors.other;
@@ -161,13 +198,16 @@
   window.PlanningCommonsFieldworkMap = {
     getSelectedLocation: () => selectedLocation,
     setSelectedLocation,
+    getEditLocation: () => editLocation,
+    setEditLocation,
+    clearEditLocation,
     setObservations,
     refresh() {
       pickerMap.invalidateSize();
       observationMap.invalidateSize();
+      editMap?.invalidateSize();
     }
   };
 
   setTimeout(() => window.PlanningCommonsFieldworkMap.refresh(), 100);
 })();
-

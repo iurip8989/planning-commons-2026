@@ -6,6 +6,12 @@ async function findObservation(env, id) {
     FROM observations WHERE id = ?`).bind(id).first();
 }
 
+function validCoordinate(latitude, longitude) {
+  return Number.isFinite(latitude) && Number.isFinite(longitude)
+    && latitude >= -90 && latitude <= 90
+    && longitude >= -180 && longitude <= 180;
+}
+
 export async function onRequestPatch({ request, env, params }) {
   try {
     await ensureSchema(env);
@@ -38,6 +44,16 @@ export async function onRequestPatch({ request, env, params }) {
       if (typeof body.note !== "string" || body.note.length > 600) return json({ error: "The note is too long." }, 400);
       updates.push("note = ?");
       values.push(body.note.trim() || null);
+    }
+    const hasLatitude = Object.hasOwn(body, "latitude");
+    const hasLongitude = Object.hasOwn(body, "longitude");
+    if (hasLatitude !== hasLongitude) return json({ error: "Both latitude and longitude are required." }, 400);
+    if (hasLatitude && hasLongitude) {
+      const latitude = Number(body.latitude);
+      const longitude = Number(body.longitude);
+      if (!validCoordinate(latitude, longitude)) return json({ error: "The location is invalid." }, 400);
+      updates.push("latitude = ?", "longitude = ?");
+      values.push(latitude, longitude);
     }
     if (Object.hasOwn(body, "starred")) {
       if (typeof body.starred !== "boolean") return json({ error: "The starred value must be true or false." }, 400);

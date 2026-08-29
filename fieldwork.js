@@ -10,6 +10,12 @@
   const ADMIN_CODE_KEY = "planning-commons-admin-code";
   const HEIC_CONVERTER_URL = "https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.js";
   let items = [];
+  let summaryData = null;
+  let summaryError = false;
+  let activeSummaryTab = "categories";
+  let materialNameFilter = "";
+  let loadSequence = 0;
+  let editItemId = "";
   let heicConverterPromise;
   let volatileManageTokens = {};
 
@@ -77,6 +83,83 @@
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 
+  function summaryLabel(entry, tab) {
+    if (tab === "categories") return categoryLabel(entry);
+    if (tab === "dates") return formatDate(entry.fieldDate);
+    return entry.name || "-";
+  }
+
+  function summaryValue(entry, tab) {
+    if (tab === "categories") return entry.category;
+    if (tab === "dates") return entry.fieldDate;
+    return entry.name || "";
+  }
+
+  function summaryFilter(tab) {
+    if (tab === "categories") return "category";
+    if (tab === "dates") return "date";
+    return "name";
+  }
+
+  function activeSummaryValue(tab) {
+    if (tab === "categories") return document.getElementById("observationCategoryFilter")?.value || "";
+    if (tab === "dates") return document.getElementById("observationDateFilter")?.value || "";
+    return materialNameFilter;
+  }
+
+  function renderSummary() {
+    const body = document.getElementById("observationSummaryBody");
+    const scope = document.getElementById("observationSummaryScope");
+    if (!body || !scope) return;
+
+    document.querySelectorAll("[data-summary-tab]").forEach((button) => {
+      const active = button.dataset.summaryTab === activeSummaryTab;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-selected", String(active));
+    });
+
+    if (summaryError) {
+      scope.textContent = "";
+      body.innerHTML = `<p class="observation-summary-message">${escapeHtml(t("summaryUnavailable"))}</p>`;
+      return;
+    }
+    if (!summaryData) {
+      scope.textContent = "";
+      body.innerHTML = `<p class="observation-summary-message">${escapeHtml(t("summaryLoading"))}</p>`;
+      return;
+    }
+
+    const total = Number(summaryData.total || 0);
+    scope.textContent = t("summaryScope", {
+      total: total.toLocaleString(currentLanguage),
+      shown: items.length.toLocaleString(currentLanguage)
+    });
+    const entries = summaryData[activeSummaryTab] || [];
+    if (!entries.length || !total) {
+      body.innerHTML = `<p class="observation-summary-message">${escapeHtml(t("summaryEmpty"))}</p>`;
+      return;
+    }
+
+    const selected = activeSummaryValue(activeSummaryTab);
+    const filter = summaryFilter(activeSummaryTab);
+    body.innerHTML = entries.map((entry) => {
+      const label = summaryLabel(entry, activeSummaryTab);
+      const value = summaryValue(entry, activeSummaryTab);
+      const count = Number(entry.count || 0);
+      const percent = total ? (count / total) * 100 : 0;
+      const categoryAttribute = activeSummaryTab === "categories" ? ` data-category="${escapeHtml(entry.category)}"` : "";
+      const active = value === selected;
+      return `<button class="observation-summary-row${active ? " active" : ""}" type="button" data-summary-filter="${filter}" data-summary-value="${escapeHtml(value)}"${categoryAttribute} title="${escapeHtml(`${label} — ${t("summaryFilterHint")}`)}">
+        <span class="observation-summary-row-label">${escapeHtml(label)}</span>
+        <span class="observation-summary-bar" aria-hidden="true"><span style="--summary-width:${Math.max(percent, 1).toFixed(1)}%"></span></span>
+        <span class="observation-summary-value">${escapeHtml(t("summaryValue", {
+          count: count.toLocaleString(currentLanguage),
+          percent: percent.toLocaleString(currentLanguage, { maximumFractionDigits: 1 })
+        }))}</span>
+      </button>`;
+    }).join("");
+  }
+
   function renderStats() {
     const target = document.getElementById("observationStats");
     if (!target) return;
@@ -88,7 +171,8 @@
       `<span class="observation-stat"><span>${escapeHtml(t("filterSummary"))}</span><strong>${items.length.toLocaleString(currentLanguage)}</strong></span>`,
       ...Object.entries(groups).sort().map(([group, count]) =>
         `<span class="observation-stat"><span>${escapeHtml(t("groupSummary", { group }))}</span><strong>${count.toLocaleString(currentLanguage)}</strong></span>`
-      )
+      ),
+      ...(materialNameFilter ? [`<button class="observation-stat observation-stat-filter" type="button" data-summary-clear-name title="${escapeHtml(t("clearFilters"))}"><span>${escapeHtml(t("summaryNameTab"))}</span><strong>${escapeHtml(materialNameFilter)}</strong><span aria-hidden="true">×</span></button>`] : [])
     ];
     target.innerHTML = chips.join("");
   }
@@ -98,6 +182,7 @@
     if (!grid) return;
     document.getElementById("observationCount").textContent = items.length.toLocaleString(currentLanguage);
     renderStats();
+    renderSummary();
     window.PlanningCommonsFieldworkMap?.setObservations(items);
 
     if (!items.length) {
@@ -111,7 +196,7 @@
       const owner = Boolean(readManageTokens()[item.id]);
       const adminMode = Boolean(document.getElementById("adminAccessCode")?.value.trim());
       const managementActions = `${owner || adminMode
-        ? `<button type="button" data-fieldwork-action="rename" data-id="${escapeHtml(item.id)}">${escapeHtml(t("rename"))}</button>`
+        ? `<button type="button" data-fieldwork-action="edit" data-id="${escapeHtml(item.id)}">${escapeHtml(t("editDetails"))}</button>`
         : ""}
         <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(adminMode ? "adminDelete" : owner ? "ownDelete" : "adminDelete"))}</button>`;
       const preview = kind === "image"
@@ -155,6 +240,7 @@
   }
 
   async function loadItems() {
+    const sequence = ++loadSequence;
     const status = document.getElementById("observationLibraryStatus");
     status.textContent = t("loadingMaterials");
     const query = new URLSearchParams();
@@ -164,19 +250,41 @@
     if (date) query.set("date", date);
     if (group) query.set("group", group);
     if (category) query.set("category", category);
+    if (materialNameFilter) query.set("name", materialNameFilter);
+
+    summaryData = null;
+    summaryError = false;
+    renderSummary();
+    const summaryPromise = (async () => {
+      try {
+        const response = await fetch(`/api/observations/summary${query.size ? `?${query}` : ""}`, { headers: { Accept: "application/json" } });
+        const result = await parseResponse(response);
+        if (sequence !== loadSequence) return;
+        summaryData = result;
+      } catch {
+        if (sequence !== loadSequence) return;
+        summaryData = null;
+        summaryError = true;
+      }
+      renderSummary();
+    })();
 
     try {
       const response = await fetch(`/api/observations${query.size ? `?${query}` : ""}`, { headers: { Accept: "application/json" } });
       const result = await parseResponse(response);
+      if (sequence !== loadSequence) return;
       items = result.items || [];
       observationItems = items;
       status.textContent = "";
       renderItems();
     } catch (error) {
+      if (sequence !== loadSequence) return;
       items = [];
       observationItems = items;
       status.textContent = error.status === 500 ? t("apiNotReady") : t("loadMaterialsError");
       renderItems();
+    } finally {
+      await summaryPromise;
     }
   }
 
@@ -216,6 +324,32 @@
       body: JSON.stringify(changes)
     });
     return parseResponse(response);
+  }
+
+  function updateEditLocationLabel(location) {
+    const label = document.getElementById("observationEditLocationText");
+    if (!label) return;
+    label.textContent = location
+      ? t("editLocationSelected", { lat: Number(location.latitude).toFixed(5), lng: Number(location.longitude).toFixed(5) })
+      : t("editLocationHint");
+  }
+
+  function openEdit(item) {
+    const dialog = document.getElementById("observationEditDialog");
+    editItemId = item.id;
+    document.getElementById("observationEditName").value = item.displayName || item.originalName;
+    document.getElementById("observationEditNote").value = item.note || "";
+    document.getElementById("observationEditStatus").textContent = "";
+    const hasLocation = item.latitude != null && item.longitude != null
+      && Number.isFinite(Number(item.latitude)) && Number.isFinite(Number(item.longitude));
+    const location = hasLocation ? { latitude: Number(item.latitude), longitude: Number(item.longitude) } : null;
+    updateEditLocationLabel(location);
+    dialog.showModal();
+    setTimeout(() => {
+      if (location) window.PlanningCommonsFieldworkMap?.setEditLocation(location.latitude, location.longitude);
+      else window.PlanningCommonsFieldworkMap?.clearEditLocation();
+      window.PlanningCommonsFieldworkMap?.refresh();
+    }, 0);
   }
 
   function canvasBlob(canvas, quality) {
@@ -410,7 +544,12 @@
     const adminCodeInput = document.getElementById("adminAccessCode");
     const studentNameInput = document.getElementById("studentName");
     const library = document.getElementById("observationGrid");
+    const summary = document.getElementById("observationSummary");
+    const stats = document.getElementById("observationStats");
     const previewDialog = document.getElementById("observationPreviewDialog");
+    const editDialog = document.getElementById("observationEditDialog");
+    const editForm = document.getElementById("observationEditForm");
+    const editSave = document.getElementById("observationEditSave");
 
     document.getElementById("fieldDate").value = new Date().toISOString().slice(0, 10);
     try { uploadCodeInput.value = sessionStorage.getItem(UPLOAD_CODE_KEY) || ""; } catch { uploadCodeInput.value = ""; }
@@ -442,6 +581,7 @@
     });
 
     window.addEventListener("fieldwork-location-change", (event) => updateLocationFields(event.detail));
+    window.addEventListener("fieldwork-edit-location-change", (event) => updateEditLocationLabel(event.detail));
     document.getElementById("useCurrentLocation").addEventListener("click", () => {
       if (!navigator.geolocation) {
         status.textContent = t("geolocationError");
@@ -525,6 +665,36 @@
       document.getElementById("observationDateFilter").value = "";
       document.getElementById("observationGroupFilter").value = "";
       document.getElementById("observationCategoryFilter").value = "";
+      materialNameFilter = "";
+      loadItems();
+    });
+
+    summary?.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-summary-tab]");
+      if (tab) {
+        activeSummaryTab = tab.dataset.summaryTab;
+        renderSummary();
+        return;
+      }
+
+      const row = event.target.closest("[data-summary-filter]");
+      if (!row) return;
+      const value = row.dataset.summaryValue || "";
+      if (row.dataset.summaryFilter === "category") {
+        const control = document.getElementById("observationCategoryFilter");
+        control.value = control.value === value ? "" : value;
+      } else if (row.dataset.summaryFilter === "date") {
+        const control = document.getElementById("observationDateFilter");
+        control.value = control.value === value ? "" : value;
+      } else if (row.dataset.summaryFilter === "name") {
+        materialNameFilter = materialNameFilter === value ? "" : value;
+      }
+      loadItems();
+    });
+
+    stats?.addEventListener("click", (event) => {
+      if (!event.target.closest("[data-summary-clear-name]")) return;
+      materialNameFilter = "";
       loadItems();
     });
 
@@ -539,10 +709,9 @@
         return;
       }
       try {
-        if (action === "rename") {
-          const nextName = window.prompt(t("renamePrompt"), item.displayName || item.originalName);
-          if (!nextName?.trim()) return;
-          await updateItem(item, { displayName: nextName.trim() });
+        if (action === "edit") {
+          openEdit(item);
+          return;
         } else if (action === "star") {
           if (!uploadCodeInput.value.trim()) throw new Error(t("uploadCodeRequired"));
           await updateItem(item, { starred: !item.starred }, true);
@@ -569,6 +738,47 @@
       }
     });
 
+    editForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const item = items.find((entry) => entry.id === editItemId);
+      const name = document.getElementById("observationEditName").value.trim();
+      const note = document.getElementById("observationEditNote").value;
+      const location = window.PlanningCommonsFieldworkMap?.getEditLocation();
+      const editStatus = document.getElementById("observationEditStatus");
+      if (!item) {
+        editStatus.textContent = t("updateError");
+        return;
+      }
+      if (!name) {
+        document.getElementById("observationEditName").focus();
+        return;
+      }
+      if (!location) {
+        editStatus.textContent = t("locationRequired");
+        return;
+      }
+
+      editSave.disabled = true;
+      editStatus.textContent = t("editSaving");
+      try {
+        const previousName = item.displayName || item.originalName;
+        await updateItem(item, {
+          displayName: name,
+          note,
+          latitude: location.latitude,
+          longitude: location.longitude
+        });
+        if (materialNameFilter === previousName) materialNameFilter = name;
+        await loadItems();
+        editDialog.close();
+        document.getElementById("observationLibraryStatus").textContent = t("editSuccess");
+      } catch (error) {
+        editStatus.textContent = error.status === 403 ? t("managePermissionError") : (error.message || t("updateError"));
+      } finally {
+        editSave.disabled = false;
+      }
+    });
+
     window.addEventListener("fieldwork-preview-request", (event) => {
       const item = items.find((entry) => entry.id === event.detail?.id);
       if (item) openPreview(item);
@@ -577,11 +787,20 @@
     document.getElementById("observationPreviewClose").addEventListener("click", () => previewDialog.close());
     previewDialog.addEventListener("click", (event) => { if (event.target === previewDialog) previewDialog.close(); });
     previewDialog.addEventListener("close", () => { document.getElementById("observationPreviewBody").innerHTML = ""; });
+    document.getElementById("observationEditClose").addEventListener("click", () => editDialog.close());
+    document.getElementById("observationEditCancel").addEventListener("click", () => editDialog.close());
+    editDialog.addEventListener("click", (event) => { if (event.target === editDialog) editDialog.close(); });
+    editDialog.addEventListener("close", () => {
+      editItemId = "";
+      document.getElementById("observationEditStatus").textContent = "";
+    });
 
     document.getElementById("siteLanguage").addEventListener("change", () => {
       setTimeout(() => {
         renderItems();
+        renderSummary();
         updateLocationFields(window.PlanningCommonsFieldworkMap?.getSelectedLocation());
+        updateEditLocationLabel(window.PlanningCommonsFieldworkMap?.getEditLocation());
       }, 0);
     });
 

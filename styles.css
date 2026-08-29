@@ -1609,6 +1609,153 @@ th {
   font-size: 15px;
 }
 
+.observation-stat-filter {
+  max-width: min(100%, 420px);
+  cursor: pointer;
+  font: inherit;
+}
+
+.observation-stat-filter strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.observation-stat-filter:hover {
+  border-color: var(--teal);
+}
+
+.observation-summary {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #c8d5d9;
+  border-radius: 12px;
+  background: #f8fbfb;
+}
+
+.observation-summary-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.observation-summary-heading h4 {
+  margin: 2px 0 0;
+  font-size: 20px;
+}
+
+.observation-summary-scope {
+  margin: 0;
+  color: #52636b;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.observation-summary-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d7e1e4;
+}
+
+.observation-summary-tabs button {
+  min-height: 38px;
+  padding: 7px 13px;
+  border: 1px solid #bfcbd3;
+  border-radius: 999px;
+  background: #fff;
+  color: #40525a;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.observation-summary-tabs button:hover,
+.observation-summary-tabs button.active {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+}
+
+.observation-summary-body {
+  display: grid;
+  gap: 8px;
+  max-height: 390px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.observation-summary-row {
+  display: grid;
+  grid-template-columns: minmax(145px, 1.2fr) minmax(130px, 2fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.observation-summary-row:hover,
+.observation-summary-row.active {
+  border-color: var(--teal);
+  box-shadow: 0 3px 12px rgba(26, 91, 82, 0.08);
+}
+
+.observation-summary-row-label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.observation-summary-bar {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7eeef;
+}
+
+.observation-summary-bar span {
+  display: block;
+  width: var(--summary-width, 0%);
+  min-width: 3px;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--teal);
+}
+
+.observation-summary-row[data-category="walking"] .observation-summary-bar span { background: #16856f; }
+.observation-summary-row[data-category="public_space"] .observation-summary-bar span { background: #2878ad; }
+.observation-summary-row[data-category="commerce"] .observation-summary-bar span { background: #d46d2d; }
+.observation-summary-row[data-category="transport"] .observation-summary-bar span { background: #7456a6; }
+.observation-summary-row[data-category="community"] .observation-summary-bar span { background: #bd4b68; }
+.observation-summary-row[data-category="environment"] .observation-summary-bar span { background: #6b8c35; }
+.observation-summary-row[data-category="other"] .observation-summary-bar span { background: #667780; }
+
+.observation-summary-value {
+  color: #3c4c54;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.observation-summary-message {
+  margin: 4px 0;
+  color: #5a6a72;
+  font-size: 14px;
+}
+
 .fieldwork-observation-map {
   width: 100%;
   min-height: 480px;
@@ -1877,6 +2024,84 @@ th {
   height: 100%;
   border: 0;
   background: #fff;
+}
+
+.observation-edit-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  border: 1px solid #aebfc5;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(24, 42, 49, 0.3);
+}
+
+.observation-edit-dialog::backdrop {
+  background: rgba(19, 34, 40, 0.64);
+}
+
+.observation-edit-dialog form {
+  display: grid;
+  max-height: calc(100vh - 34px);
+}
+
+.observation-edit-body {
+  display: grid;
+  gap: 16px;
+  overflow: auto;
+  padding: 18px;
+}
+
+.observation-edit-body label {
+  display: grid;
+  gap: 6px;
+  color: #31424b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.observation-edit-body input,
+.observation-edit-body textarea {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid #bfcbd3;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.observation-edit-body textarea {
+  resize: vertical;
+}
+
+.observation-edit-location {
+  display: grid;
+  gap: 7px;
+}
+
+.observation-edit-location p {
+  margin: 0;
+  color: #5a6a72;
+  font-size: 13px;
+}
+
+.fieldwork-edit-map {
+  width: 100%;
+  min-height: 310px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.observation-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.observation-edit-actions .fieldwork-submit {
+  min-width: 150px;
 }
 
 .space-card,
@@ -2536,14 +2761,48 @@ body.ai-chat-resizing {
     flex-direction: column;
   }
 
+  .observation-summary-heading {
+    flex-direction: column;
+  }
+
+  .observation-summary-scope {
+    text-align: left;
+  }
+
+  .observation-summary-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .observation-summary-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
   .observation-filters,
   .observation-grid {
     grid-template-columns: 1fr;
   }
 
-  .observation-preview-dialog {
+  .observation-preview-dialog,
+  .observation-edit-dialog {
     width: calc(100vw - 16px);
+  }
+
+  .observation-preview-dialog {
     height: calc(100vh - 16px);
+  }
+
+  .fieldwork-edit-map {
+    min-height: 260px;
+  }
+
+  .observation-edit-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .observation-edit-actions button {
+    width: 100%;
   }
 
   .metric-grid,
