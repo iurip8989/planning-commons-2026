@@ -8,6 +8,7 @@
   const MANAGE_TOKENS_KEY = "planning-commons-manage-tokens-v2";
   const UPLOAD_CODE_KEY = "planning-commons-upload-code";
   const ADMIN_CODE_KEY = "planning-commons-admin-code";
+  const LIBRARY_VIEW_KEY = "planning-commons-library-view";
   const HEIC_CONVERTER_URL = "https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.js";
   let items = [];
   let summaryData = null;
@@ -16,6 +17,7 @@
   let materialNameFilter = "";
   let loadSequence = 0;
   let editItemId = "";
+  let activeLibraryView = "cards";
   let heicConverterPromise;
   let volatileManageTokens = {};
 
@@ -177,35 +179,37 @@
     target.innerHTML = chips.join("");
   }
 
-  function renderItems() {
-    const grid = document.getElementById("observationGrid");
-    if (!grid) return;
-    document.getElementById("observationCount").textContent = items.length.toLocaleString(currentLanguage);
-    renderStats();
-    renderSummary();
-    window.PlanningCommonsFieldworkMap?.setObservations(items);
+  function updateLibraryViewControls() {
+    document.querySelectorAll("[data-library-view]").forEach((button) => {
+      const active = button.dataset.libraryView === activeLibraryView;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
 
-    if (!items.length) {
-      grid.innerHTML = `<p class="empty-state">${escapeHtml(t("noUploadedMaterials"))}</p>`;
-      return;
+  function itemManagementActions(item) {
+    const owner = Boolean(readManageTokens()[item.id]);
+    const adminMode = Boolean(document.getElementById("adminAccessCode")?.value.trim());
+    return `<button type="button" data-fieldwork-action="edit" data-id="${escapeHtml(item.id)}">${escapeHtml(t("editDetails"))}</button>
+      <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(adminMode ? "adminDelete" : owner ? "ownDelete" : "adminDelete"))}</button>`;
+  }
+
+  function itemPreview(item, compact = false) {
+    const kind = observationKind(item);
+    const title = item.displayName || item.originalName;
+    if (kind === "image") {
+      return `<img src="${encodeURI(item.thumbnailUrl || item.fileUrl)}" alt="${escapeHtml(title)}" loading="lazy" />`;
     }
+    return `<span class="observation-file-badge${compact ? " compact" : ""}">${escapeHtml(t(kind === "video" ? "fileVideo" : kind === "pdf" ? "filePdf" : "fileOther"))}</span>`;
+  }
 
+  function renderCardItems(grid) {
     grid.innerHTML = items.map((item) => {
-      const kind = observationKind(item);
       const title = item.displayName || item.originalName;
-      const owner = Boolean(readManageTokens()[item.id]);
-      const adminMode = Boolean(document.getElementById("adminAccessCode")?.value.trim());
-      const managementActions = `${owner || adminMode
-        ? `<button type="button" data-fieldwork-action="edit" data-id="${escapeHtml(item.id)}">${escapeHtml(t("editDetails"))}</button>`
-        : ""}
-        <button class="danger" type="button" data-fieldwork-action="delete" data-id="${escapeHtml(item.id)}">${escapeHtml(t(adminMode ? "adminDelete" : owner ? "ownDelete" : "adminDelete"))}</button>`;
-      const preview = kind === "image"
-        ? `<img src="${encodeURI(item.thumbnailUrl || item.fileUrl)}" alt="${escapeHtml(title)}" loading="lazy" />`
-        : `<span class="observation-file-badge">${escapeHtml(t(kind === "video" ? "fileVideo" : kind === "pdf" ? "filePdf" : "fileOther"))}</span>`;
       return `
         <article class="observation-card${item.starred ? " is-starred" : ""}">
           <button class="observation-preview-trigger" type="button" data-fieldwork-action="preview" data-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(`${t("preview")}: ${title}`)}">
-            ${preview}
+            ${itemPreview(item)}
           </button>
           <div class="observation-card-body">
             <div class="observation-card-title-row">
@@ -217,11 +221,77 @@
             <p class="observation-filename"><span>${escapeHtml(t("originalFileName"))}:</span> ${escapeHtml(item.originalName)} · ${escapeHtml(formatSize(item.sizeBytes))}</p>
             <div class="observation-actions">
               <button type="button" data-fieldwork-action="preview" data-id="${escapeHtml(item.id)}">${escapeHtml(t("preview"))}</button>
-              ${managementActions}
+              ${itemManagementActions(item)}
             </div>
           </div>
         </article>`;
     }).join("");
+  }
+
+  function renderTableItems(target) {
+    const rows = items.map((item) => {
+      const title = item.displayName || item.originalName;
+      const hasLocation = item.latitude != null && item.longitude != null
+        && Number.isFinite(Number(item.latitude)) && Number.isFinite(Number(item.longitude));
+      const location = hasLocation ? `${Number(item.latitude).toFixed(5)}, ${Number(item.longitude).toFixed(5)}` : "-";
+      return `<tr>
+        <td class="observation-table-preview"><button type="button" data-fieldwork-action="preview" data-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(`${t("preview")}: ${title}`)}">${itemPreview(item, true)}</button></td>
+        <td><strong>${escapeHtml(title)}</strong><small>${escapeHtml(item.originalName)}</small></td>
+        <td>${escapeHtml(categoryLabel(item))}</td>
+        <td>${escapeHtml(formatDate(item.fieldDate))}</td>
+        <td>${escapeHtml(t("groupSummary", { group: item.groupCode }))}</td>
+        <td>${escapeHtml(item.studentName || "-")}</td>
+        <td class="observation-table-description">${escapeHtml(item.note || t("noDescription"))}</td>
+        <td class="observation-table-location">${escapeHtml(location)}</td>
+        <td><div class="observation-table-actions">
+          <button type="button" data-fieldwork-action="preview" data-id="${escapeHtml(item.id)}">${escapeHtml(t("preview"))}</button>
+          ${itemManagementActions(item)}
+        </div></td>
+      </tr>`;
+    }).join("");
+    target.innerHTML = `<table class="observation-table">
+      <thead><tr>
+        <th>${escapeHtml(t("tablePreview"))}</th>
+        <th>${escapeHtml(t("tableMaterial"))}</th>
+        <th>${escapeHtml(t("tableCategory"))}</th>
+        <th>${escapeHtml(t("tableDate"))}</th>
+        <th>${escapeHtml(t("tableGroup"))}</th>
+        <th>${escapeHtml(t("tableStudent"))}</th>
+        <th>${escapeHtml(t("tableDescription"))}</th>
+        <th>${escapeHtml(t("tableLocation"))}</th>
+        <th>${escapeHtml(t("tableActions"))}</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function renderItems() {
+    const grid = document.getElementById("observationGrid");
+    const table = document.getElementById("observationTable");
+    if (!grid || !table) return;
+    document.getElementById("observationCount").textContent = items.length.toLocaleString(currentLanguage);
+    renderStats();
+    renderSummary();
+    updateLibraryViewControls();
+    window.PlanningCommonsFieldworkMap?.setObservations(items);
+
+    const tableMode = activeLibraryView === "table";
+    grid.hidden = tableMode;
+    table.hidden = !tableMode;
+
+    if (!items.length) {
+      const target = tableMode ? table : grid;
+      target.innerHTML = `<p class="empty-state">${escapeHtml(t("noUploadedMaterials"))}</p>`;
+      (tableMode ? grid : table).innerHTML = "";
+      return;
+    }
+    if (tableMode) {
+      grid.innerHTML = "";
+      renderTableItems(table);
+    } else {
+      table.innerHTML = "";
+      renderCardItems(grid);
+    }
   }
 
   async function parseResponse(response) {
@@ -543,7 +613,7 @@
     const uploadCodeInput = document.getElementById("uploadAccessCode");
     const adminCodeInput = document.getElementById("adminAccessCode");
     const studentNameInput = document.getElementById("studentName");
-    const library = document.getElementById("observationGrid");
+    const library = document.getElementById("observationResults");
     const summary = document.getElementById("observationSummary");
     const stats = document.getElementById("observationStats");
     const previewDialog = document.getElementById("observationPreviewDialog");
@@ -555,6 +625,10 @@
     try { uploadCodeInput.value = sessionStorage.getItem(UPLOAD_CODE_KEY) || ""; } catch { uploadCodeInput.value = ""; }
     try { adminCodeInput.value = sessionStorage.getItem(ADMIN_CODE_KEY) || ""; } catch { adminCodeInput.value = ""; }
     try { studentNameInput.value = localStorage.getItem("planning-commons-student-name") || ""; } catch { studentNameInput.value = ""; }
+    try {
+      const savedView = localStorage.getItem(LIBRARY_VIEW_KEY);
+      if (["cards", "table"].includes(savedView)) activeLibraryView = savedView;
+    } catch {}
 
     uploadCodeInput.addEventListener("input", () => {
       try { sessionStorage.setItem(UPLOAD_CODE_KEY, uploadCodeInput.value); } catch {}
@@ -698,6 +772,14 @@
       loadItems();
     });
 
+    document.querySelector(".observation-view-switch")?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-library-view]");
+      if (!button || button.dataset.libraryView === activeLibraryView) return;
+      activeLibraryView = button.dataset.libraryView;
+      try { localStorage.setItem(LIBRARY_VIEW_KEY, activeLibraryView); } catch {}
+      renderItems();
+    });
+
     library.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-fieldwork-action]");
       if (!button) return;
@@ -710,6 +792,14 @@
       }
       try {
         if (action === "edit") {
+          const owner = Boolean(readManageTokens()[item.id]);
+          const adminCode = adminCodeInput.value.trim();
+          if (!owner && !adminCode) {
+            document.getElementById("observationLibraryStatus").textContent = t("editPermissionRequired");
+            adminCodeInput.focus();
+            adminCodeInput.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+          }
           openEdit(item);
           return;
         } else if (action === "star") {

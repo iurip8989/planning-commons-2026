@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>心中山 Planning Commons</title>
     <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="styles.css?v=20260829-fieldwork-summary-edit" />
+    <link rel="stylesheet" href="styles.css?v=20260829-fieldwork-table" />
   </head>
   <body>
     <header class="topbar">
@@ -538,6 +538,22 @@
               <button id="observationFiltersClear" class="observation-clear-button" type="button" data-i18n="clearFilters">絞り込みを解除</button>
             </div>
             <div id="observationStats" class="observation-stats" aria-live="polite"></div>
+            <div id="fieldworkObservationMap" class="fieldwork-observation-map" aria-label="Shared fieldwork observation map"></div>
+            <p id="observationLibraryStatus" class="fieldwork-status" aria-live="polite"></p>
+            <div class="observation-view-toolbar">
+              <div>
+                <strong data-i18n="viewModeTitle">画像情報の表示方法</strong>
+                <span data-i18n="viewModeHint">カードまたは1画像1行の情報表で確認できます。</span>
+              </div>
+              <div class="observation-view-switch" role="group" aria-label="Library view" data-i18n-aria-label="viewModeTitle">
+                <button class="active" type="button" data-library-view="cards" aria-pressed="true" data-i18n="viewCards">画像カード</button>
+                <button type="button" data-library-view="table" aria-pressed="false" data-i18n="viewTable">情報表</button>
+              </div>
+            </div>
+            <div id="observationResults">
+              <div id="observationGrid" class="observation-grid"></div>
+              <div id="observationTable" class="observation-table-wrap" hidden></div>
+            </div>
             <section id="observationSummary" class="observation-summary" aria-labelledby="observationSummaryTitle">
               <div class="observation-summary-heading">
                 <div>
@@ -555,9 +571,6 @@
                 <p class="observation-summary-message" data-i18n="summaryLoading">集計を読み込んでいます…</p>
               </div>
             </section>
-            <div id="fieldworkObservationMap" class="fieldwork-observation-map" aria-label="Shared fieldwork observation map"></div>
-            <p id="observationLibraryStatus" class="fieldwork-status" aria-live="polite"></p>
-            <div id="observationGrid" class="observation-grid"></div>
           </div>
         </div>
       </section>
@@ -629,7 +642,7 @@
     <script src="assets/leaflet/leaflet.js"></script>
     <script src="course-map.js?v=20260806-fieldwork"></script>
     <script src="fieldwork-map.js?v=20260829-fieldwork-summary-edit"></script>
-    <script src="fieldwork.js?v=20260829-fieldwork-summary-edit"></script>
-    <script src="app.js?v=20260829-fieldwork-summary-edit"></script>
+    <script src="fieldwork.js?v=20260829-fieldwork-table"></script>
+    <script src="app.js?v=20260829-fieldwork-table"></script>
   </body>
 </html>
