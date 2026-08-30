@@ -404,10 +404,27 @@
       : t("editLocationHint");
   }
 
+  function updateEditCategoryField() {
+    const category = document.getElementById("observationEditCategory");
+    const field = document.getElementById("observationEditOtherCategoryField");
+    const input = document.getElementById("observationEditOtherCategory");
+    if (!category || !field || !input) return;
+    const other = category.value === "other";
+    field.hidden = !other;
+    input.required = other;
+    if (!other) input.value = "";
+  }
+
   function openEdit(item) {
     const dialog = document.getElementById("observationEditDialog");
     editItemId = item.id;
+    document.getElementById("observationEditStudentName").value = item.studentName || "";
     document.getElementById("observationEditName").value = item.displayName || item.originalName;
+    document.getElementById("observationEditDate").value = item.fieldDate || "";
+    document.getElementById("observationEditGroup").value = item.groupCode || "A";
+    document.getElementById("observationEditCategory").value = item.category || "walking";
+    document.getElementById("observationEditOtherCategory").value = item.otherCategory || "";
+    updateEditCategoryField();
     document.getElementById("observationEditNote").value = item.note || "";
     document.getElementById("observationEditStatus").textContent = "";
     const hasLocation = item.latitude != null && item.longitude != null
@@ -620,6 +637,8 @@
     const editDialog = document.getElementById("observationEditDialog");
     const editForm = document.getElementById("observationEditForm");
     const editSave = document.getElementById("observationEditSave");
+    const editCategory = document.getElementById("observationEditCategory");
+    const editOtherInput = document.getElementById("observationEditOtherCategory");
 
     document.getElementById("fieldDate").value = new Date().toISOString().slice(0, 10);
     try { uploadCodeInput.value = sessionStorage.getItem(UPLOAD_CODE_KEY) || ""; } catch { uploadCodeInput.value = ""; }
@@ -647,6 +666,8 @@
       otherInput.required = other;
       if (!other) otherInput.value = "";
     });
+
+    editCategory.addEventListener("change", updateEditCategoryField);
 
     filesInput.addEventListener("change", () => {
       const files = [...(filesInput.files || [])];
@@ -831,7 +852,12 @@
     editForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const item = items.find((entry) => entry.id === editItemId);
+      const studentName = document.getElementById("observationEditStudentName").value.trim();
       const name = document.getElementById("observationEditName").value.trim();
+      const fieldDate = document.getElementById("observationEditDate").value;
+      const groupCode = document.getElementById("observationEditGroup").value;
+      const categoryValue = editCategory.value;
+      const otherCategory = editOtherInput.value.trim();
       const note = document.getElementById("observationEditNote").value;
       const location = window.PlanningCommonsFieldworkMap?.getEditLocation();
       const editStatus = document.getElementById("observationEditStatus");
@@ -839,8 +865,20 @@
         editStatus.textContent = t("updateError");
         return;
       }
+      if (!studentName) {
+        document.getElementById("observationEditStudentName").focus();
+        return;
+      }
       if (!name) {
         document.getElementById("observationEditName").focus();
+        return;
+      }
+      if (!fieldDate) {
+        document.getElementById("observationEditDate").focus();
+        return;
+      }
+      if (categoryValue === "other" && !otherCategory) {
+        editOtherInput.focus();
         return;
       }
       if (!location) {
@@ -853,7 +891,12 @@
       try {
         const previousName = item.displayName || item.originalName;
         await updateItem(item, {
+          studentName,
           displayName: name,
+          fieldDate,
+          groupCode,
+          category: categoryValue,
+          otherCategory,
           note,
           latitude: location.latitude,
           longitude: location.longitude

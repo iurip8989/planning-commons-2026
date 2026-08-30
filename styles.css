@@ -1644,8 +1644,9 @@ th {
 }
 
 .observation-table-wrap {
-  max-height: 720px;
+  height: clamp(360px, 56vh, 560px);
   overflow: auto;
+  overscroll-behavior: contain;
   border: 1px solid #c8d5d9;
   border-radius: 10px;
   background: #fff;
@@ -2249,6 +2250,22 @@ th {
   padding: 18px;
 }
 
+.observation-edit-hint {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #edf5f3;
+  color: #405b55;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.observation-edit-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
 .observation-edit-body label {
   display: grid;
   gap: 6px;
@@ -2257,7 +2274,12 @@ th {
   font-weight: 800;
 }
 
+.observation-edit-body label[hidden] {
+  display: none;
+}
+
 .observation-edit-body input,
+.observation-edit-body select,
 .observation-edit-body textarea {
   width: 100%;
   padding: 10px 11px;
@@ -2266,6 +2288,10 @@ th {
   background: #fff;
   color: var(--ink);
   font: inherit;
+}
+
+.observation-edit-note-field {
+  grid-column: 1 / -1;
 }
 
 .observation-edit-body textarea {
@@ -3003,6 +3029,18 @@ body.ai-chat-resizing {
 
   .fieldwork-edit-map {
     min-height: 260px;
+  }
+
+  .observation-edit-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .observation-edit-note-field {
+    grid-column: auto;
+  }
+
+  .observation-table-wrap {
+    height: min(58vh, 500px);
   }
 
   .observation-edit-actions {

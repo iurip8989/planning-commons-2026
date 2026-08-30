@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>心中山 Planning Commons</title>
     <link rel="stylesheet" href="assets/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="styles.css?v=20260829-fieldwork-table" />
+    <link rel="stylesheet" href="styles.css?v=20260829-fieldwork-edit-all" />
   </head>
   <body>
     <header class="topbar">
@@ -605,14 +605,51 @@
           <button id="observationEditClose" class="observation-icon-button" type="button" aria-label="Close editor" data-i18n-aria-label="editCancel">×</button>
         </div>
         <div class="observation-edit-body">
-          <label>
-            <span data-i18n="editMaterialName">資料名</span>
-            <input id="observationEditName" type="text" maxlength="160" required />
-          </label>
-          <label>
-            <span data-i18n="editDescription">画像の説明</span>
-            <textarea id="observationEditNote" rows="4" maxlength="600" data-i18n-placeholder="editDescriptionPlaceholder" placeholder="観察内容、撮影方向、時間帯、インタビューの要点など"></textarea>
-          </label>
+          <p class="observation-edit-hint" data-i18n="editAllFieldsHint">アップロード時に登録した情報をすべて修正できます。元の画像ファイルは変更されません。</p>
+          <div class="observation-edit-fields">
+            <label>
+              <span data-i18n="studentName">氏名またはニックネーム</span>
+              <input id="observationEditStudentName" type="text" maxlength="60" required />
+            </label>
+            <label>
+              <span data-i18n="editMaterialName">資料名</span>
+              <input id="observationEditName" type="text" maxlength="160" required />
+            </label>
+            <label>
+              <span data-i18n="fieldDate">調査日</span>
+              <input id="observationEditDate" type="date" required />
+            </label>
+            <label>
+              <span data-i18n="studentGroup">学生グループ</span>
+              <select id="observationEditGroup" required>
+                <option value="A" data-i18n="groupA">A班</option>
+                <option value="B" data-i18n="groupB">B班</option>
+                <option value="C" data-i18n="groupC">C班</option>
+                <option value="D" data-i18n="groupD">D班</option>
+                <option value="E" data-i18n="groupE">E班</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="observationCategory">観察カテゴリー</span>
+              <select id="observationEditCategory" required>
+                <option value="walking" data-i18n="catWalking">歩行空間</option>
+                <option value="public_space" data-i18n="catPublic">公共空間</option>
+                <option value="commerce" data-i18n="catCommerce">商業</option>
+                <option value="transport" data-i18n="catTransport">交通</option>
+                <option value="community" data-i18n="catCommunity">コミュニティ</option>
+                <option value="environment" data-i18n="catEnvironment">環境</option>
+                <option value="other" data-i18n="catOther">その他</option>
+              </select>
+            </label>
+            <label id="observationEditOtherCategoryField" hidden>
+              <span data-i18n="otherCategory">その他のカテゴリー</span>
+              <input id="observationEditOtherCategory" type="text" maxlength="80" />
+            </label>
+            <label class="observation-edit-note-field">
+              <span data-i18n="editDescription">画像の説明</span>
+              <textarea id="observationEditNote" rows="4" maxlength="600" data-i18n-placeholder="editDescriptionPlaceholder" placeholder="観察内容、撮影方向、時間帯、インタビューの要点など"></textarea>
+            </label>
+          </div>
           <div class="observation-edit-location">
             <strong data-i18n="editLocationTitle">地図上の位置を調整</strong>
             <p id="observationEditLocationText" data-i18n="editLocationHint">地図をクリックするか、マーカーをドラッグしてください。</p>
@@ -642,7 +679,7 @@
     <script src="assets/leaflet/leaflet.js"></script>
     <script src="course-map.js?v=20260806-fieldwork"></script>
     <script src="fieldwork-map.js?v=20260829-fieldwork-summary-edit"></script>
-    <script src="fieldwork.js?v=20260829-fieldwork-table"></script>
-    <script src="app.js?v=20260829-fieldwork-table"></script>
+    <script src="fieldwork.js?v=20260829-fieldwork-edit-all"></script>
+    <script src="app.js?v=20260829-fieldwork-edit-all"></script>
   </body>
 </html>

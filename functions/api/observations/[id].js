@@ -1,8 +1,12 @@
 import { canManage, ensureSchema, json, matchesSecret, normalizeObservation } from "../../../src/cloudflare-storage.js";
 
+const GROUPS = new Set(["A", "B", "C", "D", "E"]);
+const CATEGORIES = new Set(["walking", "public_space", "commerce", "transport", "community", "environment", "other"]);
+
 async function findObservation(env, id) {
   return env.DB.prepare(`SELECT id, object_key AS objectKey, thumbnail_key AS thumbnailKey,
-    manage_token_hash AS manageTokenHash, starred
+    manage_token_hash AS manageTokenHash, starred, category,
+    other_category AS otherCategory
     FROM observations WHERE id = ?`).bind(id).first();
 }
 
@@ -10,6 +14,10 @@ function validCoordinate(latitude, longitude) {
   return Number.isFinite(latitude) && Number.isFinite(longitude)
     && latitude >= -90 && latitude <= 90
     && longitude >= -180 && longitude <= 180;
+}
+
+function validDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
 }
 
 export async function onRequestPatch({ request, env, params }) {
@@ -39,6 +47,41 @@ export async function onRequestPatch({ request, env, params }) {
       }
       updates.push("display_name = ?");
       values.push(body.displayName.trim());
+    }
+    if (Object.hasOwn(body, "studentName")) {
+      if (typeof body.studentName !== "string" || !body.studentName.trim() || body.studentName.trim().length > 60) {
+        return json({ error: "The student name must contain 1 to 60 characters." }, 400);
+      }
+      updates.push("student_name = ?");
+      values.push(body.studentName.trim());
+    }
+    if (Object.hasOwn(body, "fieldDate")) {
+      if (typeof body.fieldDate !== "string" || !validDate(body.fieldDate.trim())) {
+        return json({ error: "A valid fieldwork date is required." }, 400);
+      }
+      updates.push("field_date = ?");
+      values.push(body.fieldDate.trim());
+    }
+    if (Object.hasOwn(body, "groupCode")) {
+      if (typeof body.groupCode !== "string" || !GROUPS.has(body.groupCode.trim())) {
+        return json({ error: "A valid student group is required." }, 400);
+      }
+      updates.push("group_code = ?");
+      values.push(body.groupCode.trim());
+    }
+    const hasCategory = Object.hasOwn(body, "category");
+    const hasOtherCategory = Object.hasOwn(body, "otherCategory");
+    if (hasCategory || hasOtherCategory) {
+      if ((hasCategory && typeof body.category !== "string") || (hasOtherCategory && typeof body.otherCategory !== "string")) {
+        return json({ error: "A valid observation category is required." }, 400);
+      }
+      const category = hasCategory && typeof body.category === "string" ? body.category.trim() : item.category;
+      const otherCategory = hasOtherCategory && typeof body.otherCategory === "string" ? body.otherCategory.trim() : (item.otherCategory || "");
+      if (!CATEGORIES.has(category) || otherCategory.length > 80 || (category === "other" && !otherCategory)) {
+        return json({ error: "A valid observation category is required." }, 400);
+      }
+      updates.push("category = ?", "other_category = ?");
+      values.push(category, category === "other" ? otherCategory : null);
     }
     if (Object.hasOwn(body, "note")) {
       if (typeof body.note !== "string" || body.note.length > 600) return json({ error: "The note is too long." }, 400);
